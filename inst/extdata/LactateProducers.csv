@@ -1,0 +1,9 @@
+,NSP,RS,Sugars,Acetate,Lactate,Formate,Ethanol,H2O
+Rtype,S,S,S,P,P,P,P,Sw
+halfSat,0.001,0.001,0.001,NA,NA,NA,NA,NA
+yield,0.286,0.333,0.333,NA,NA,NA,NA,NA
+maxGrowthRate,7.2,6,24,NA,NA,NA,NA,NA
+stoichiom,6,6,6,10,4,2,1,1
+keyResource,Hex,,,,,,,
+numPathways,1,,,,,,,
+pHcorners,4.95,5.7,7.2,7.95,,,,

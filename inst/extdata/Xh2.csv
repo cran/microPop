@@ -1,0 +1,8 @@
+,Sh2,Biomass,Sch4,SIC,Snh3
+Rtype,Se,Pb,P,Se,Se
+halfSat,0.00001168,NA,NA,1E-22,0.0034
+yield,0.0904,NA,NA,NA,NA
+maxGrowthRate,0.0223,NA,NA,NA,NA
+stoichiom,1,0.0016,0.246,0.254,0.0016
+keyResource,Sh2,,,,
+pHcorners,0,0,10,10,

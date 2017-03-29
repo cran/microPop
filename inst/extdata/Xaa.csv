@@ -1,0 +1,8 @@
+,Saa,Biomass,Sac,Sbu,Spr,Sh2,SIC,Snh3
+Rtype,Se,Pb,P,P,P,P,P,P
+halfSat,0.8576,NA,NA,NA,NA,NA,NA,NA
+yield,0.2614,NA,NA,NA,NA,NA,NA,NA
+maxGrowthRate,0.614,NA,NA,NA,NA,NA,NA,NA
+stoichiom,1,0.31,0.462,0.1656,0.04278,0.5658,0.6072,1.19
+keyResource,Saa,,,,,,,
+pHcorners,0,0,10,10,,,,

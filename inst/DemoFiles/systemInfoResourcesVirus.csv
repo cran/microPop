@@ -1,0 +1,5 @@
+,"Nutrient","Bacteria1","Bacteria2","resistantBacteria1"
+"startValue",1,1,1,0
+"inflowRate",1,0,0,0
+"washOut",0.1,0.1,0.1,0.1
+"molarMass",180,113,113,113
