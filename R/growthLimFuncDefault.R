@@ -14,6 +14,7 @@
 #' @param strainHalfSat Vector (with names corresponding to the resourceNames) of half-saturation constants for the given strain. If resource is not a substrate for the given strain, the value is NA 
 #' @param stateVarValues State vector (resources and microbes) (with names)
 #' @return scalar giving limitation on growth rate - must be >=0 and <=1
+#' @export
 #' 
 growthLimFuncDefault=function(strainName,groupName,pathName,varName,resourceValues,allSubType,strainHalfSat,stateVarValues){
 

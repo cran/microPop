@@ -16,6 +16,7 @@
 #' @include entryRateFuncDefault.R
 #' @include removalRateFuncDefault.R
 #'
+#' @export
 #' 
 rateFuncsDefault<-list(
 

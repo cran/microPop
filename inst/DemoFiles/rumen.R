@@ -17,11 +17,6 @@ kd = 8.3333e-4 #death rate of microbes
 f.X=c(0.2,0.55); names(f.X)=c('Znsc','Zpro') #fraction of dead cells that turn to polymers
 khyd=c(0.05,0.20,0.22); names(khyd)=c('Zndf','Znsc','Zpro')#hydrolysis of polymers
 
-#input files
-resourceDF=createDF(paste(path.package('microPop'),'/inst/DemoFiles/resourceSysInfoRumen.csv',sep=''))
-microbeDF=createDF(paste(path.package('microPop'),'/inst/DemoFiles/microbeSysInfoRumen.csv',sep=''))
-Xh2['maxGrowthRate','Sh2']=0.6 #increase growth rate of methanogens
-
 myRateFuncs=rateFuncsDefault
 
 myRateFuncs$removalRateFunc=function(varName,varValue,stateVarValues,time,washOut,parms){
@@ -43,7 +38,7 @@ myRateFuncs$entryRateFunc=function(varName,varValue,stateVarValues,time,inflowRa
     if (varName%in%parms$microbeNames){
         v.in=inflowRate[gname]/parms$numStrains
     }else if (varName%in%polymer.names){
-        v.in=inflowRate[varName]*max(sin(pi*time/6),0)
+        v.in=inflowRate[varName]
     }else{
         v.in=inflowRate[varName]
     }
@@ -67,18 +62,66 @@ myRateFuncs$entryRateFunc=function(varName,varValue,stateVarValues,time,inflowRa
     return(v)
 }
 
-out=microPopModel(
-    microbeNames=microbeNames,
-    times=time.hours,
-    rateFuncs=myRateFuncs,
-    resourceSysInfo=resourceDF,
-    microbeSysInfo=microbeDF,
-  checkingOptions=list(balanceTol=1e-2,reBalanceStoichiom=FALSE,checkMassConv=FALSE,checkStoichiomBalance=FALSE),
-    plotOptions=list(yLabel='concentration (g/l)',xLabel='time (h)',plotFig=TRUE,sumOverStrains=FALSE,saveFig=FALSE,figType='eps',figName='Rumen')
-)
 
-#plot methane concentration
+z.in=c(1,5,10,15,20) #inflow rates
+n=length(z.in)
+methane=array(NA,dim=c(length(time.hours),n,3))
+X=array(NA,dim=c(length(time.hours),n,3))
+H2=array(NA,dim=c(length(time.hours),n,3))
+SIC=array(NA,dim=c(length(time.hours),n,3))
+nh3=array(NA,dim=c(length(time.hours),n,3))
+Xa=array(NA,dim=c(length(time.hours),n,3))
+Sa=array(NA,dim=c(length(time.hours),n,3))
+
+
+for (z in 1:3){
+    
+    resourceDF=resourceSysInfoRumen #reset dataframe
+
+    for (i in 1:n){
+
+        resourceDF['startValue',polymer.names[z]]=z.in[i]
+        print(paste(polymer.names[z],'=',z.in[i],'g/l'))
+
+        out=microPopModel(
+            microbeNames=microbeNames,
+            times=time.hours,
+            rateFuncs=myRateFuncs,
+            resourceSysInfo=resourceDF,
+            microbeSysInfo=microbeSysInfoRumen,
+            odeOptions=list(rtol=1e-10,atol=1e-10),
+            checkingOptions=list(balanceTol=1e-2,reBalanceStoichiom=FALSE,checkMassConv=FALSE,checkStoichiomBalance=FALSE),
+            plotOptions=list(yLabel='concentration (g/l)',xLabel='time (h)',plotFig=FALSE,saveFig=FALSE,figType='eps',figName='Rumen')
+        )
+        methane[,i,z]=out$solution[,'Sch4']
+        X[,i,z]=out$solution[,'Xh2']
+        H2[,i,z]=out$solution[,'Sh2']
+        SIC[,i,z]=out$solution[,'SIC']
+        nh3[,i,z]=out$solution[,'Snh3']
+        Xa[,i,z]=out$solution[,'Xaa']
+        Sa[,i,z]=out$solution[,'Xaa']
+    }
+
+}
+
 dev.new()
-par(mar=c(5,5,5,2))
-plot(time.hours,out$solution[,'Sch4'],type='l',xlab='Time (hours)',ylab='Methane concentration (g/l)',cex.lab=1.5,cex.axis=1.5,lwd=2,main='Methane',cex.main=1.5)
-#dev.copy2eps(file='RumenMethane.eps')
+par(mfrow=c(3,3))
+par(mar=c(4,4,2,1))
+vars=list(methane,X,nh3)
+v.names=list('Sch4','Xh2','Snh3')
+N=length(vars)
+for (z in 1:3){
+    for (i in 1:N){
+        mat=vars[[i]]
+        
+        if (z<3 & i==N){maxy=0.3}else{ maxy=max(mat,na.rm=TRUE)}
+        
+        plot(range(time.hours),c(min(mat,na.rm=TRUE),maxy),type='n',xlab='Time (hours)',ylab=paste(v.names[i],'(g/l)'),cex.lab=1.2,cex.axis=1.2,lwd=2,main=paste('Varying',polymer.names[z]),cex.main=1.2)
+        for (j in 1:n){
+            lines(time.hours,mat[,j,z],col=j,lwd=2)
+        }
+        if (i==2){legend('topright',paste(z.in),lty=1,lwd=2,col=1:n,title='initial concentration (g/l)',bty='n',cex=1.0)}
+    }
+}
+#dev.copy2eps(file=paste('Rumen.eps',sep=''))
+

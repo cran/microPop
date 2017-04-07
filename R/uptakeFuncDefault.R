@@ -19,7 +19,7 @@
 #' @param parms List containing all system parameters
 #'
 #' @return (scalar) uptake of resource per mass unit of biomass (units are resource mass/biomass/time)
-#' 
+#' @export
 uptakeFuncDefault=function(strainName,groupName,pathName,varName,keyResName,subst,ess,boost,maxGrowthRate,growthLim,yield,nonBoostFrac,stoichiom,parms){
         
     if (length(ess)>0){#multiply growth lims for essential resources

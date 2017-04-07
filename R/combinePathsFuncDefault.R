@@ -11,7 +11,7 @@
 #' @param pathNames Vector of names of all metabolic paths e.g. c('path1','path2')
 #'
 #' @return vector specifying the fraction of the total microbial growth on each pathway
-#' 
+#' @export
 combinePathsFuncDefault=function(strainName,groupName,growthRate,num.paths,pathNames){
 
         if (sum(growthRate)>0){

@@ -9,7 +9,8 @@
 #' @param growthRate (vector) microbial growth rate (mass per unit time) for one strain on each metabolic pathway
 #' @param balanceTol (scalar) Defined in microPopModel input list checkingOptions
 #' @param strainName (string) Name of strain in ODE solver loop
-
+#' @export
+#' 
 massBalanceFuncDefault=function(uptake,production,growthRate,balanceTol,strainName){
 
     flag=0

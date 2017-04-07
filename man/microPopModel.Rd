@@ -15,9 +15,9 @@ microPopModel(microbeNames, times, resourceSysInfo, microbeSysInfo,
 
 \item{times}{Vector of times at which the solution is required, e.g. seq(0,10,0.1)}
 
-\item{resourceSysInfo}{String giving the name of a csv file or a dataframe, which describes the initial conditions, inflow and outflow (if constant) and molar mass of each resource. See help(resourceSysInfo) for more info.}
+\item{resourceSysInfo}{String giving the name of a csv file or a dataframe object, which describes the initial conditions, inflow and outflow (if constant) and molar mass of each resource. See help(resourceSysInfo) for more info.}
 
-\item{microbeSysInfo}{String giving the name of a csv file (e.g. 'systemInfoMicrobes.csv') or a dataframe, which describes the initial conditions, inflow and outflow (if constant) of each microbial group. See help(microbeSysInfo) for more info.}
+\item{microbeSysInfo}{String giving the name of a csv file (e.g. 'systemInfoMicrobes.csv') or a dataframe object, which describes the initial conditions, inflow and outflow (if constant) of each microbial group. See help(microbeSysInfo) for more info.}
 
 \item{rateFuncs}{A list of functions which are used to solve the ODEs in odeFunc. Default is rateFuncsDefault.R (provided in the package). See ?rateFuncs}
 
@@ -36,16 +36,16 @@ To turn off plot generation set plotFig=FALSE. If there are multiple strains the
 
 \item{odeOptions}{List containing instructions for the ODE solver ('deSolve'). Default: list('atol'=1e-6,'rtol'=1e-6,'method'='lsoda'). See ?ode for more details.}
 
-\item{strainOptions}{List containing instructions for specifying strain parameters. Default: list(randomParams=c('halfSat', 'yield', 'maxGrowthRate', 'pHtrait'), seed=1, distribution='uniform', percentTraitRange=10, maxPHshift=0.2, applyTradeOffs=FALSE, tradeOffParams=NULL, paramsFromFile=FALSE, paramFileName=NULL). 
+\item{strainOptions}{List containing instructions for specifying strain parameters. Default: list(randomParams=c('halfSat', 'yield', 'maxGrowthRate', 'pHtrait'), seed=1, distribution='uniform', percentTraitRange=10, maxPHshift=0.2, applyTradeOffs=FALSE, tradeOffParams=NULL, paramsSpecified=FALSE, paramDataName=NULL). 
 \itemize{
 \item randomParams (vector) specifying which parameters need to be stochastically generated.
 \item seed (number) seed for random number generator.
 \item distribution (string) - either 'uniform' or 'normal' specifying the shape of the distribution from which to draw the random strain parameters. 
 \item percentTraitRange (number) this is the percentage either side of the group parameter value which the strain parameter may range e.g. if percentTraitRange=10 then range is 0.9x to 1.1x for group mean x. 
 \item maxPHshift (number) pH units to range over.
-\item applyTradeOffs (logical) to trade off `good' and `bad' parameter values.
-\item tradeOffParams (vector of two strings) - parameters to trade off against each other.
-\item paramsFromFile (logical) TRUE if strain parameters are read in from a file (whose name is specified in paramFileName). The file must have colnames c(strainName, paramName, paramVal, paramUnit, resource) and rownames are the strain names in format 'groupName.i' where i is the strain number.
+\item applyTradeOffs (logical) to trade off `good' and `bad' parameter values. 
+\item tradeOffParams (vector of two strings) - parameters to trade off against each other. Note that pHtrait can not be traded off as whether this trait is good or bad depends on the environmental pH.
+\item paramsSpecified (logical) TRUE if strain parameters are read in from a file (whose name is specified in paramDataName). The file must have colnames c(strainName, paramName, paramVal, paramUnit, resource,path) and where strainName is in format 'groupName.i' where i is the strain number.
 }}
 
 \item{checkingOptions}{List - default is list(checkMassConv=FALSE, balanceTol=1e-2, reBalanceStoichiom=FALSE, stoiTol=0.1, checkForNegs=TRUE, negTol=-1e-2). 

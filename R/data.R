@@ -237,6 +237,42 @@ NULL
 #' @format  dataframe
 #' @seealso resourceSysInfo
 NULL
+#' resourceSysInfoRumen dataframe
+#'
+#' Table of information describing the inflows, outflows, start values and molar masses of each resource for the R script microPop/inst/DemoFiles/rumen*.R
+#' See help(resourceSysInfo) or for an explanation of the contents 
+#'
+#' @docType data
+#' @keywords datasets data
+#' @name resourceSysInfoRumen
+#' @usage resourceSysInfoRumen
+#' @format  dataframe
+#' @seealso resourceSysInfo
+NULL
+#' systemInfoResourcesPhyto dataframe
+#'
+#' Table of information describing the inflows, outflows, start values and molar masses of each resource for the R script microPop/inst/DemoFiles/phyto.R
+#' See help(resourceSysInfo) or for an explanation of the contents 
+#'
+#' @docType data
+#' @keywords datasets data
+#' @name systemInfoResourcesPhyto
+#' @usage systemInfoResourcesPhyto
+#' @format  dataframe
+#' @seealso resourceSysInfo
+NULL
+#' systemInfoResourcesVirus dataframe
+#'
+#' Table of information describing the inflows, outflows, start values and molar masses of each resource for the R script microPop/inst/DemoFiles/phages.R
+#' See help(resourceSysInfo) or for an explanation of the contents 
+#'
+#' @docType data
+#' @keywords datasets data
+#' @name systemInfoResourcesVirus
+#' @usage systemInfoResourcesVirus
+#' @format  dataframe
+#' @seealso resourceSysInfo
+NULL
 #' microbeSysInfoHuman dataframe
 #'
 #' Table of information describing the inflows, outflows, start values of each microbial group for the R script microPop/inst/DemoFiles/human*.R
@@ -248,4 +284,51 @@ NULL
 #' @usage microbeSysInfoHuman
 #' @format  dataframe
 #' @seealso microbeSysInfo
+NULL
+#' microbeSysInfoRumen dataframe
+#'
+#' Table of information describing the inflows, outflows, start values of each microbial group for the R script microPop/inst/DemoFiles/rumen.R
+#' See help(microbeSysInfo) or for an explanation of the contents 
+#'
+#' @docType data
+#' @keywords datasets data
+#' @name microbeSysInfoRumen
+#' @usage microbeSysInfoRumen
+#' @format  dataframe
+#' @seealso microbeSysInfo
+NULL
+#' systemInfoMicrobesPhyto dataframe
+#'
+#' Table of information describing the inflows, outflows, start values of each microbial group for the R script microPop/inst/DemoFiles/phyto.R
+#' See help(microbeSysInfo) or for an explanation of the contents 
+#'
+#' @docType data
+#' @keywords datasets data
+#' @name systemInfoMicrobesPhyto
+#' @usage systemInfoMicrobesPhyto
+#' @format  dataframe
+#' @seealso microbeSysInfo
+NULL
+#' systemInfoMicrobesVirus dataframe
+#'
+#' Table of information describing the inflows, outflows, start values of each microbial group for the R script microPop/inst/DemoFiles/phages.R
+#' See help(microbeSysInfo) or for an explanation of the contents 
+#'
+#' @docType data
+#' @keywords datasets data
+#' @name systemInfoMicrobesVirus
+#' @usage systemInfoMicrobesVirus
+#' @format  dataframe
+#' @seealso microbeSysInfo
+NULL
+#' strainParams dataframe
+#'
+#' Table containing some parameter values for specific strains for the R script microPop/inst/DemoFiles/human4.R
+#' The file must have colnames c(strainName, paramName, paramVal, paramUnit, resource,path) where strainName is in format 'groupName.i' where i is the strain number.
+#'
+#' @docType data
+#' @keywords datasets data
+#' @name strainParams
+#' @usage strainParams
+#' @format  dataframe
 NULL

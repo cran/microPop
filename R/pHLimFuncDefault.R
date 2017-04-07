@@ -8,10 +8,10 @@
 #' @param pH (scalar). The current pH value.
 #' @param parms List of all parameters
 #' @return (scalar) pH limitation (0 to 1)
+#' @export
 
 pHLimFuncDefault=function(strainName,groupName,pH,parms){
     pHcorners=parms$strainPHcorners[strainName,]
-    #print(pHcorners)
     if (!is.finite(pH)){stop('MICROPOP ERROR: The value for pH is not defined')}
     grad1=1/(pHcorners[2]-pHcorners[1])
     grad2=1/(pHcorners[3]-pHcorners[4])

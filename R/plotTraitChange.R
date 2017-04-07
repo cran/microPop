@@ -10,7 +10,8 @@
 #' @param figName String
 #' @importFrom graphics legend lines par plot
 #' @importFrom grDevices dev.copy2eps dev.copy2pdf dev.new rainbow tiff dev.print png
-
+#' @export
+#' 
 plotTraitChange=function(out,trait.name,group.names,resource.name=NULL,path=NULL,xlabel='Time (days)',saveFig=FALSE,figType='eps',figName='Traits'){
 
     wlen=7;hlen=7 #width and height for png files

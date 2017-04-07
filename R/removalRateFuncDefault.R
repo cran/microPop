@@ -11,6 +11,7 @@
 #' @param washOut (named vector) of wash out rates (per unit time) of groups and resources (specified in SysInfo files)
 #' @param parms List containing all system parameters
 #' @return (scalar) rate of removal (quantity per unit time) for the state variable varName
+#' @export
 #' 
 removalRateFuncDefault=function(varName,varValue,stateVarValues,time,washOut,parms){
     if (varValue<=0){

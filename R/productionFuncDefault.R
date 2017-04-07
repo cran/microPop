@@ -19,7 +19,7 @@
 #' @param water Name of resource with Rtype 'Sw' - i.e resource could be called 'water' or 'H2O' etc
 #'
 #' @return (scalar) production rate of resource (units are resource mass/time)
-#' 
+#' @export 
  productionFuncDefault=function(strainName,groupName,pathName,varName,all.substrates,keyResName,stoichiom,products,bio.products,uptake,growthRate,yield,parms,water){
 
     if (growthRate>0){

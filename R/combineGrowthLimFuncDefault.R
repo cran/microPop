@@ -17,7 +17,8 @@
 #' @param nonBoostFrac (scalar) Fraction of max growth achievable if boosting resource is not present but is required on this pathway
 
 #' @return (scalar) specific growth rate in units of inverse time 
-#' 
+#'
+#' @export
 combineGrowthLimFuncDefault=function(strainName,groupName,pathName,subst,ess,boost,bio.sub,maxGrowthRate,growthLim,keyResName,nonBoostFrac){
  
     if (length(subst)>0){#sum growth limitations for substitutable resources

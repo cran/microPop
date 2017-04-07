@@ -11,7 +11,8 @@
 #' @param inflowRate (named vector) on inflow rates (specified in SysInfo files)
 #' @param parms List containing all system parameters
 #' @return (scalar) rate of entry (quantity per unit time) for any state variable
-#' 
+#'
+#' @export
 
 entryRateFuncDefault=function(varName,varValue,stateVarValues,time,inflowRate,parms){
 

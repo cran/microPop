@@ -21,8 +21,11 @@ out=microPopModel(
     rateFuncs=myRateFuncs,
     plotOptions=list(yLabel='concentration (g/l)',xLabel='time (d)',plotFig=TRUE,sumOverStrains=FALSE,saveFig=FALSE,figType='eps',figName='Human4'),
     pHLimit=TRUE,
-    strainOptions=list(randomParams=c('halfSat','yield','maxGrowthRate','pHtrait'),seed=1,distribution='uniform',percentTraitRange=5,maxPHshift=0.05,applyTradeOffs=TRUE,tradeOffParams=c('halfSat','maxGrowthRate'),paramsFromFile=TRUE,paramFileName=paste(path.package('microPop'),'/inst/DemoFiles/strainParams.csv',sep=''))
-)
+    strainOptions=list(randomParams=c('halfSat','yield','maxGrowthRate','pHtrait'),seed=1,
+                       distribution='uniform',percentTraitRange=5,maxPHshift=0.05,
+                       applyTradeOffs=TRUE,tradeOffParams=c('halfSat','maxGrowthRate'),
+                       paramsSpecified=TRUE,paramDataName=strainParams)
+) 
 
 avpHtrait=plotTraitChange(out,'pHtrait',c('Bacteroides','NoButyStarchDeg','Acetogens'),resource.name=NULL,path=NULL,xlabel='Time (days)',saveFig=FALSE,figType='eps',figName='Human4Traits')
 

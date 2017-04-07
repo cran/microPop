@@ -65,8 +65,8 @@ for (z in depths){
   out=microPopModel(
     microbeNames=microbeNames,
     times=sim.times,
-    resourceSysInfo=paste(path.package('microPop'),'/inst/DemoFiles/systemInfoResourcesPhyto.csv',sep=''),
-    microbeSysInfo=paste(path.package('microPop'),'/inst/DemoFiles/systemInfoMicrobesPhyto.csv',sep=''),
+    resourceSysInfo=systemInfoResourcesPhyto,
+    microbeSysInfo=systemInfoMicrobesPhyto,
     rateFuncs=myRateFuncs,
     checkingOptions=list(checkStoichiomBalance=FALSE),
     plotOptions=list(plotFig=FALSE),

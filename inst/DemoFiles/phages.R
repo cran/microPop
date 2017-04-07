@@ -79,8 +79,8 @@ if (run==4){mutation.frac['Bacteria1']=-0.001; mutation.frac['resistantBacteria1
 out=microPopModel(
     microbeNames=microbeNames,
     times=seq(0,150,0.1),
-    resourceSysInfo=paste(path.package('microPop'),'/inst/DemoFiles/systemInfoResourcesVirus.csv',sep=''),
-    microbeSysInfo=paste(path.package('microPop'),'/inst/DemoFiles/systemInfoMicrobesVirus.csv',sep=''),
+    resourceSysInfo=systemInfoResourcesVirus,
+    microbeSysInfo=systemInfoMicrobesVirus,
     rateFuncs=myRateFuncs,
     checkingOptions=list(checkStoichiomBalance=FALSE),
     plotOptions=list(yLabel='Number of cells',saveFig=FALSE,figType='eps',figName=paste('Virus',run,sep='')),

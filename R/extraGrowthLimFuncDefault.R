@@ -11,7 +11,7 @@
 #' @param time time,t, in ODE solver
 #' @param parms list of all parameters
 #' @return (scalar) limitation on growth (between 0 and 1)
-
+#' @export
 extraGrowthLimFuncDefault=function(strainName,groupName,pathName,stateVarValues,stateVarNames,time,parms){
     #the output from this function will multiply maxGrowthRate
     #it can therefore be used to inhibit growth in any way you like!
