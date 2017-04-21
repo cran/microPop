@@ -4,7 +4,7 @@
 #' Each resource (substrate, metabolic product or biomass (if microbial production is included in the chemical stoichiometry)) has a column. The first column can be used for describing the units of each parameter. This is optional and just for clarity - it is not used within microPop (note, the units column must be labelled 'units' and it can not contain NAs). 
 #' The row names and their details are given below:
 #' \itemize{
-#' \item Rtype Describes the type of resource. Can be S (substitutable substrate), Se (essential substrate), Sb (boosting substrate), Sw (water as a substrate), P (product), Pb (biomass product) or X (not used)
+#' \item Rtype Describes the type of resource. Can be S (substitutable substrate), Se (essential substrate), Sb (boosting substrate), Sm (microbial substrate), Sw (water as a substrate), P (product), Pb (biomass product) or X (not used)
 #' \item halfSat Half-saturation constant for Monod Equation growth. Units must match the units of the resources. Resources that aren't used for growth will have entry NA.
 #' \item yield This is the biomass yield i.e. mass of microbes/mass of substrate consumed. Note this is NOT a mol/mol yield! Resources that aren't used for growth will have entry NA.
 #' \item maxGrowthRate Maximum growth rate of the group. Units are per unit time where time has the same units as those used for the microPopModel input arguments 'times'. Resources that aren't used for growth must have entry NA.

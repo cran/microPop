@@ -30,7 +30,7 @@
             
         }else{
             #sum all uptakes and remove microbial growth to find mass available for products
-            waterUp=uptake[water]#uptake rate of water
+            if (length(water)>0){waterUp=uptake[water]}else{waterUp=0}#uptake rate of water
             v=(stoichiom[varName]/sum(stoichiom[products]))*(sum(uptake[all.substrates])+waterUp-growthRate)
         }
         

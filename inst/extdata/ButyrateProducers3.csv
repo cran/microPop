@@ -4,7 +4,7 @@ halfSat,g/l,0.001,0.001,0.001,NA,NA,NA,NA,NA,NA,NA
 yield,g/g,0.286,0.333,0.333,NA,NA,NA,NA,NA,NA,NA
 maxGrowthRate,/d,7.2,7.2,24,NA,NA,NA,NA,NA,NA,NA
 stoichiom,mol,10,10,10,2,9,12,10,8,NA,2
-keyResource,none,Hex,,,,,,,,,
+keyResource,none,NA,,,,,,,,,
 numPathways,none,2,,,,,,,,,
 Rtype.2,none,X,X,X,Se,P,X,P,P,Se,P
 halfSat.2,g/l,NA,NA,NA,0.001,NA,NA,NA,NA,0.001,NA

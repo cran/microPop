@@ -63,7 +63,7 @@ myRateFuncs$entryRateFunc=function(varName,varValue,stateVarValues,time,inflowRa
 }
 
 
-z.in=c(1,5,10,15,20) #inflow rates
+z.in=c(1,5,10,15,20) 
 n=length(z.in)
 methane=array(NA,dim=c(length(time.hours),n,3))
 X=array(NA,dim=c(length(time.hours),n,3))
@@ -99,7 +99,7 @@ for (z in 1:3){
         SIC[,i,z]=out$solution[,'SIC']
         nh3[,i,z]=out$solution[,'Snh3']
         Xa[,i,z]=out$solution[,'Xaa']
-        Sa[,i,z]=out$solution[,'Xaa']
+        Sa[,i,z]=out$solution[,'Saa']
     }
 
 }

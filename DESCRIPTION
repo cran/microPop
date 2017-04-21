@@ -1,8 +1,8 @@
 Package: microPop
 Type: Package
 Title: Modelling Microbial Populations
-Version: 1.1
-Date: 2017-04-07
+Version: 1.2
+Date: 2017-04-21
 Authors@R: person("Helen", "Kettle", email = "Helen.Kettle@bioss.ac.uk",role = c("aut", "cre"))
 Description: Modelling interacting microbial populations - example applications include human gut microbiota, rumen microbiota and phytoplankton. Solves a system of ordinary differential equations to simulate microbial growth and resource uptake over time.
 License: GPL-3 | file LICENSE
@@ -31,8 +31,8 @@ Collate: 'applyTraitTradeOffs.R' 'assignNAsToMFGs.R'
         'rateFuncsDefault.R' 'replaceListItems.R'
         'runMicroPopExample.R' 'subsetFunc.R' 'waterUptakeRatio.R'
 NeedsCompilation: no
-Packaged: 2017-04-07 15:14:21 UTC; helen
+Packaged: 2017-04-21 17:54:23 UTC; helen
 Author: Helen Kettle [aut, cre]
 Maintainer: Helen Kettle <Helen.Kettle@bioss.ac.uk>
 Repository: CRAN
-Date/Publication: 2017-04-07 17:01:23 UTC
+Date/Publication: 2017-04-21 18:21:02 UTC

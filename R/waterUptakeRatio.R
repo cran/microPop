@@ -25,7 +25,9 @@ waterUptakeRatio=function(microbeNames,stoichiom,Rtype,numPaths){
                     upS=mean(stoichiom[gname,Rtype[gname,,path.name]=='S',path.name],na.rm=TRUE)
                 }else{
                     upS=0}
-                up=upS+sum(stoichiom[gname,Rtype[gname,,path.name]=='Se',path.name])+sum(stoichiom[gname,Rtype[gname,,path.name]=='Sb',path.name])
+                
+                up=upS+sum(stoichiom[gname,Rtype[gname,,path.name]=='Se',path.name])+sum(stoichiom[gname,Rtype[gname,,path.name]=='Sb',path.name])+sum(stoichiom[gname,Rtype[gname,,path.name]=='Sm',path.name])
+                
                 water.ratio[gname,path.name]=sum(stoichiom[gname,Rtype[gname,,path.name]=='Sw',path.name])/up
 
                }

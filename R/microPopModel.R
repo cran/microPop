@@ -26,7 +26,7 @@
 #'\item tradeOffParams (vector of two strings) - parameters to trade off against each other. Note that pHtrait can not be traded off as whether this trait is good or bad depends on the environmental pH.
 #'\item paramsSpecified (logical) TRUE if strain parameters are read in from a file (whose name is specified in paramDataName). The file must have colnames c(strainName, paramName, paramVal, paramUnit, resource,path) and where strainName is in format 'groupName.i' where i is the strain number.
 #' }
-#' @param checkingOptions List - default is list(checkMassConv=FALSE, balanceTol=1e-2, reBalanceStoichiom=FALSE, stoiTol=0.1, checkForNegs=TRUE, negTol=-1e-2). 
+#' @param checkingOptions (List) Default is list(checkMassConv=FALSE, balanceTol=1e-2, reBalanceStoichiom=FALSE, stoiTol=0.1, checkForNegs=TRUE, negTol=-1e-2). 
 #' \itemize{
 #' \item checkMassConv=TRUE checks for mass conservation in the ODE solver with a tolerance of 'balanceTol' (default is FALSE).
 #' \item reBalanceStoichiom will check the mass balance of the stoichiometries on every metabolic path and rebalance if these are not conserving mass within a tolerance of stoiTol (a warning message will be issued).
@@ -39,7 +39,7 @@
 #' @examples
 #' #simplest example - define one microbial group (Archea) with 4 resources and
 #' #simulate growth over 50 days
-#' #make microbial group data frame
+#' #make microbial group data frame:
 #' MFG=matrix(NA,ncol=4,nrow=6,dimnames=list(c('Rtype','halfSat','yield',
 #' 'maxGrowthRate','stoichiom','keyResource'),c('H2','CO2','CH4','H2O')))
 #' MFG['Rtype',]=c('Se','Se','P','P')
@@ -54,7 +54,7 @@
 #' Rmat=matrix(NA,ncol=4,nrow=4,dimnames=list(c('startValue','inflowRate',
 #' 'washOut','molarMass'),c('H2','CO2','CH4','H2O')))
 #' Rmat['startValue',]=c(1,1,0,0)
-#' Rmat['inflowRate',]=c(1,1,0,0)
+#' Rmat['inflowRate',]=c(1,5,0,0)
 #' Rmat['washOut',]=c(0.1,0.1,0.1,0.1)
 #' Rmat['molarMass',]=c(2,44,16,18)
 #' 

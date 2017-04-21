@@ -18,14 +18,18 @@ assignNAsToMFGS=function(microbeNames,numPaths,keyRes,resourceNames){
         for (rname in resourceNames){
             if (rname%in%colnames(data)){
                 for (path in 1:numPaths[gname]){
+                    
                     pname=paste('path',path,sep='')
                     if (path==1){
-                        Rtype=data['Rtype',rname]
+                        Rvar='Rtype'
                     }else{
-                        Rtype=data[paste('Rtype.',path,sep=''),rname]
+                        Rvar=paste('Rtype.',path,sep='')
                     }
                     
-                    if (Rtype=='Se' | Rtype=='Sb' ){ #essential and biomass resources
+                    Rtype=data[Rvar,rname]
+                    if (is.na(Rtype)){stop(paste('MICROPOP ERROR:', Rvar,'is not specified for',gname,'on path',path))}
+                    if (!'S'%in%data[Rvar,]){ #if there are no substitutable resources on the path:
+                    if (Rtype=='Se' | Rtype=='Sb'){ #essential and biomass resources
                         if (rname!=keyRes[[gname]][pname]){
                             if (path==1){
                                 for (param in paramNames[1:2]){
@@ -46,7 +50,8 @@ assignNAsToMFGS=function(microbeNames,numPaths,keyRes,resourceNames){
                                 }
                             }
                         }
-                    }
+                    }# if Rtype=='Se' | Rtype=='Sb'
+                    }#subst res if
 
                     if (Rtype=='X' | Rtype=='P' ){#unused resources and products
                         if (path==1){

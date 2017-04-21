@@ -4,6 +4,6 @@ halfSat,g/l,0.001,0.001,NA,NA,NA
 yield,g/g,0.286,0.333,NA,NA,NA
 maxGrowthRate,/d,16.8,3.6,NA,NA,NA
 stoichiom,mol,1,1,1,1,1
-keyResource,none,Hex,,,,
+keyResource,none,NA,,,,
 numPathways,none,1,,,,
 pHcorners,pHunits,5,5.75,7.25,8,

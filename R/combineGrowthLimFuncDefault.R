@@ -48,6 +48,11 @@ combineGrowthLimFuncDefault=function(strainName,groupName,pathName,subst,ess,boo
     if (length(subst)>0 & length(boost)>0 & length(ess)==0){#res are a mix of subst and boost
         v=subst.growth*(nonBoostFrac[boost]+(1-nonBoostFrac[boost])*boost.lim)
     }
+
+    if (length(subst)==0 & length(boost)>0 & length(ess)>0){#res are a mix of ess and boost
+        v=maxGrowthRate[keyResName]*ess.lim*(nonBoostFrac[boost]+(1-nonBoostFrac[boost])*boost.lim)
+    }
+    
     
     if (!exists('v')){stop('MICROPOP ERROR: An unaccounted for combination of resource types in combineGrowthLimFunc')}
     

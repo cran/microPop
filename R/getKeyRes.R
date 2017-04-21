@@ -23,28 +23,27 @@ getKeyRes=function(microbeNames,numPaths){
         kvar=paste('keyResource.',p,sep='')
         Rvar=paste('Rtype.',p,sep='')
       }
-      
-#      if (any(data[Rvar,]=='Se') | any(data[Rvar,]=='Sb') | any(data[Rvar,]=='Sm')){
-        if (any(colnames(data)=='units') | any(colnames(data)=='Units')){
-          vec[p]=data[kvar,][[2]]
-        }else{
-          vec[p]=data[kvar,][[1]]
-        }
-  #    }
 
-    }
+        if (any(colnames(data)=='units') | any(colnames(data)=='Units')){
+            vec[p]=data[kvar,][[2]]
+        }else{
+            vec[p]=data[kvar,][[1]]}
+
+        if (any(data[Rvar,]=='Se') | any(data[Rvar,]=='Sb') | any(data[Rvar,]=='Sm')){
+#            if (!vec[p]%in%colnames(data)){stop(paste('MICROPOP ERROR: The key resource for',gname,'on path',p,'is not one of its resources'))}
+        }else{
+           if (!is.na(vec[p])){
+                print(vec[p])
+                print(paste('MICROPOP NOTE TO USER: The key resource for',gname,'on path',p,'is not used'))
+            }
+        }
+
+    }#path loop
       
     key=append(key,list(vec))
   }
   
   names(key)=microbeNames
           
- #               if (!key[gname]%in%colnames(data)){stop(paste('MICROPOP ERROR: The key resource for',gname,'is not one of its resources'))}
-#                if (stoichiomType[gname,p]=='Product' & data[Rvar,key[gname]]=='S'){
- #                   stop(paste('ERROR INFO: The key resource must be one of the products (not substrates) if stoichiomType is type Product. Please check your values for path ',p,' in ',gname,'.csv',sep=''))
- #               }
- #           }
- #       }#p
- #   }
   return(key)
 }

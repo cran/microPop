@@ -42,18 +42,18 @@ uptakeFuncDefault=function(strainName,groupName,pathName,varName,keyResName,subs
         
     }else if (varName%in%ess){
         
-        if (length(subst)==0){#all res are ess
+        if (length(subst)==0){#all res are ess - use key resource
             if (varName==keyResName){
                 v=maxGrowthRate[keyResName]*ess.lim/yield[keyResName]
             }else{
                 v=(stoichiom[varName]/stoichiom[keyResName])*maxGrowthRate[keyResName]*ess.lim/yield[keyResName]}
-        }else{# mix of subst and ess res
+        }else{# mix of subst and ess res - do not use key resource
             subst.uptake=ess.lim*sum(maxGrowthRate[subst]*growthLim[subst]/yield[subst])
             v=(stoichiom[varName]/mean(stoichiom[subst]))*subst.uptake
         }
         
     }else if (varName%in%boost){
-                                        #compute uptake of substitutable resources due to booster
+        #compute uptake of substitutable resources due to booster - do not use key resource
         subst.uptake=(1-nbf)*boost.lim*sum(maxGrowthRate[subst]*growthLim[subst]/yield[subst])
         v=subst.uptake*stoichiom[boost]/mean(stoichiom[subst])
      }else{
