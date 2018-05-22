@@ -29,4 +29,3 @@ getValues(sysInfoMicrobes, sysInfoRes, stateVarNames, quantity, strainNames,
 get system quantity (e.g. startValue, inflowRate, washOut) for all state variables
 (convention is that microbes are before resources)
 }
-

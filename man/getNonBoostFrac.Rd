@@ -21,4 +21,3 @@ an array with format [group,resource,path]
 obtains the none boosting fraction of growth for given MFG
 if there is a boosting resource
 }
-

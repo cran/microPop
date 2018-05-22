@@ -92,7 +92,7 @@ p.times=round(seq(0,max(sim.times),max(sim.times)/10),digits=0)
 cols=rainbow(length(p.times))
 ct=1
 for (mat in mats){
-    dev.new()
+    dev.new(bg='white')
     par(mar=(c(5,5,2,1)))
     plot(c(0,max(mat)),range(depths),ylim=rev(range(depths)),type='n',
          xlab='Concentration (g/l)',ylab='Depth (m)',cex.lab=1.5,cex.axis=1.5,main=titles[ct])
@@ -100,8 +100,10 @@ for (mat in mats){
         lines(mat[sim.times==p.times[p],],depths,col=cols[p],lwd=2)
     }
     legend(legendloc[ct],legend=p.times,col=cols,lty=1,lwd=2,title='days from start',bty='n')
+    dev.print(png, filename = paste("Phyto",ct,".png",sep=''), res = 100, width = 7, height = 7, units = "in")
     ct=ct+1
 }
+        
 
 if (length(microbeNames)>1){
     L=length(sim.times)
@@ -124,4 +126,8 @@ if (length(microbeNames)>1){
     print(paste('depth of group 1 maximum is ',depths[bac1[L,]==max(bac1[L,])],'m'))
     print(paste('depth of group 2 maximum is ',depths[bac2[L,]==max(bac2[L,])],'m'))
     print(paste('depth of group 3 maximum is ',depths[bac3[L,]==max(bac3[L,])],'m'))
+    dev.print(png, filename = paste("Phyto",ct,".png",sep=''), res = 100, width = 7, height = 7, units = "in")
 }
+
+
+        

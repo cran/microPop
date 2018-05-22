@@ -17,6 +17,8 @@
 
 makeParamMatrixS = function(resNames, microbeNames, parameterName, numPaths, numStrains, 
     strainOptions, oneStrainRandomParams) {
+
+    #print(parameterName)
     
     pList = list()
     nam = NULL
@@ -109,7 +111,7 @@ makeParamMatrixS = function(resNames, microbeNames, parameterName, numPaths, num
     }
     
     names(pList) = nam
-    
+
     return(pList)
     
 }

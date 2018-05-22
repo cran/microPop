@@ -20,4 +20,3 @@ Checks whether the all the resources needed are included
 in the system information file (e.g. start value, washout rate etc)
 }
 \keyword{export}
-

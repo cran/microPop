@@ -20,4 +20,3 @@ named vector or array
 this function is needed due to R dropping the names when it subsets
 }
 \keyword{internal}
-

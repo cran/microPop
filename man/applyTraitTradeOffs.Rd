@@ -35,4 +35,3 @@ then sorting them in opposite orders.  This means the parameter
 values don't change number but they are assigned to different
 strains.
 }
-

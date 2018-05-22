@@ -21,4 +21,3 @@ Takes the solution (state of system) from the previous compartment (out$solution
 and then finds the washout rate of each state variable using removalRateFunc
 to find the inflow rate to the next downstream compartment
 }
-

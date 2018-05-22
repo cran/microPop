@@ -19,4 +19,3 @@ getStrainParamsFromFile(Pmats, strainPHcorners, strainOptions)
 \description{
 get strain parameter values from a csv file
 }
-

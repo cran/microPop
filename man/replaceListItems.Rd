@@ -19,4 +19,3 @@ list.default updated with entries from list.in
 used to replace items in list.in in list.default
 needed for processing microPop input args like plotOptions
 }
-

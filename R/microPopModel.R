@@ -185,6 +185,7 @@ microPopModel = function(microbeNames, times, resourceSysInfo, microbeSysInfo, r
     assignNAsToMFGs(microbeNames, numPaths, keyRes, resourceNames)
     
     # Make matrices of the parameters in parameterNames
+        #(and assign strain traits for halfsat, yield and maxGrowthRate)
     for (i in 1:length(parameterNames.s)) {
         assign(parameterNames.s[i], makeParamMatrixS(resourceNames, microbeNames, 
             parameterNames.s[i], numPaths, numStrains, strainOptions, oneStrainRandomParams))
@@ -232,7 +233,8 @@ microPopModel = function(microbeNames, times, resourceSysInfo, microbeSysInfo, r
     }
     
     pHcorners = getPHcorners(microbeNames, pHLimit)
-    
+
+    #assign pH strain traits
     strainPHcorners = getStrainPHcorners(microbeNames, allStrainNames, numStrains, 
         pHcorners, pHLimit, strainOptions)
     

@@ -33,4 +33,3 @@ Produces a random distribution of trait values where the mean is groupVal
 and the range is determined by percentRange (if not pHtrait)
 and by maxPHshift if it is the pHtrait (see strainOptions)
 }
-

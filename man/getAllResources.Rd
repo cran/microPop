@@ -15,4 +15,3 @@ vector of resource names
 \description{
 Makes vector of unique resource names
 }
-

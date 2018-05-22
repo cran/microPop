@@ -19,4 +19,3 @@ group name (string) if xname is a strain name. If xname is not a the name of a s
 Convert strain name to its group name
 e.g. 'Bacteroides.1' becomes 'Bacteroides'
 }
-

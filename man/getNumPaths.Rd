@@ -16,4 +16,3 @@ if numPathways is not in dataframe then it is set to 1.
 \description{
 get the number of metabolic pathways for the given group
 }
-

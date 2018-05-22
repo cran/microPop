@@ -23,4 +23,3 @@ pH value at centre of mass
 Find the pH value which is the centre of mass of the pH limitation function
 (used for the pH trait)
 }
-

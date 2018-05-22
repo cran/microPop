@@ -2,8 +2,8 @@
 % Please edit documentation in R/rateFuncsDefault.R
 \docType{data}
 \name{rateFuncsDefault}
-\alias{rateFuncs}
 \alias{rateFuncsDefault}
+\alias{rateFuncs}
 \title{List of functions that are used by the ODE solver
 these functions can be changed by the user but all must be listed.}
 \format{An object of class \code{list} of length 11.}
@@ -14,4 +14,3 @@ rateFuncsDefault
 rateFuncsDefault=list(pHFunc=pHFuncDefault, pHLimFunc=pHLimFuncDefault, extraGrowthLimFunc=extraGrowthLimFuncDefault, growthLimFunc=growthLimFuncDefault, combineGrowthLimFunc=combineGrowthLimFuncDefault, uptakeFunc=uptakeFuncDefault, productionFunc=productionFuncDefault, combinePathsFunc=combinePathsFuncDefault, massBalanceFunc=massBalanceFuncDefault, entryRateFunc=entryRateFuncDefault, removalRateFunc=removalRateFuncDefault)
 }
 \keyword{datasets}
-

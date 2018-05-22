@@ -4,11 +4,11 @@
 \alias{quickPlot}
 \title{Generic plotting showing results of microPop}
 \usage{
-quickPlot(out, numR, numStrains, microbeNames, yLabel, xLabel, sumOverStrains,
+quickPlot(soln, numR, numStrains, microbeNames, yLabel, xLabel, sumOverStrains,
   saveFig = FALSE, figType = "eps", figName = "microPopFig")
 }
 \arguments{
-\item{out}{Output from microPopModel()}
+\item{soln}{ODE output from microPopModel() i.e. matrix out$solution}
 
 \item{numR}{Scalar. Number of resources}
 
@@ -34,4 +34,3 @@ Nothing just generates a plot
 \description{
 Generic plotting showing results of microPop
 }
-

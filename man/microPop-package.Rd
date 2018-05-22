@@ -2,18 +2,17 @@
 % Please edit documentation in R/microPop-package.R
 \docType{package}
 \name{microPop-package}
-\alias{microPop}
 \alias{microPop-package}
+\alias{microPop}
 \title{Microbial Population modelling}
 \description{
 microPop can be used to model the dynamics and interactions of microbial populations.
 }
-\author{
-Helen Kettle
-}
 \references{
 To be done
 }
+\author{
+Helen Kettle
+}
 \keyword{package}
 \keyword{programming}
-

@@ -39,4 +39,3 @@ stored in Mat[strain,res,path], this is then rearranged to make a matrix
 for each strain (mat[path,res]).
 }
 \keyword{internal}
-

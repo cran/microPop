@@ -33,4 +33,3 @@ array has form [group,resource,path]
 reads in data from MFG dataframes
 }
 \keyword{internal}
-

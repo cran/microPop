@@ -22,4 +22,3 @@ The data frame must contain the following rows:
 }
 \keyword{data}
 \keyword{datasets}
-

@@ -14,4 +14,3 @@ The file must have colnames c(strainName, paramName, paramVal, paramUnit, resour
 }
 \keyword{data}
 \keyword{datasets}
-

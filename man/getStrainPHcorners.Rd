@@ -28,4 +28,3 @@ where the limit is c(0,1,1,0) for each strain
 Returns the values of the pH values of the limit function i.e. where the limit is c(0,1,1,0)
 Reads these in from the microbe group dataframes
 }
-

@@ -25,4 +25,3 @@ Computes the mass ratio of water uptake to substrate uptake
 (i.e. mass uptake of water divided by total mass uptake)
 }
 \keyword{internal}
-

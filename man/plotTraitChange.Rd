@@ -30,4 +30,3 @@ plotTraitChange(out, trait.name, group.names, resource.name = NULL,
 \description{
 plot changes in trait over time
 }
-

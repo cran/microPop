@@ -17,4 +17,3 @@ MFG
 }
 \keyword{data}
 \keyword{datasets}
-

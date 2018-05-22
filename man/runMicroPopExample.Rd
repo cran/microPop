@@ -13,4 +13,3 @@ runMicroPopExample(name = NULL)
 This function is similar to the demo() function but requires less interaction
 It is used to run the canned examples from the microPop package.
 }
-

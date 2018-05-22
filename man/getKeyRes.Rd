@@ -17,4 +17,3 @@ list of vectors where the names are microbeNames
 \description{
 Finds the name of the key resource for each path for each MFG
 }
-

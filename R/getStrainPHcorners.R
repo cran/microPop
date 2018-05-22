@@ -20,18 +20,24 @@ getStrainPHcorners = function(microbeNames, allStrainNames, numStrains, pHcorner
     mat = matrix(NA, ncol = 4, nrow = length(allStrainNames),
         dimnames = list(allStrainNames))
 
-    if (pHLimit & "pHtrait" %in% strainOptions$randomParams) {
-        # assign strain traits
+    if (pHLimit){
         for (g in 1:length(microbeNames)) {
-            shifts = assignStrainTraits(numStrains, 1, strainOptions,
-                parName = "pHtrait", 
-                pHtrait = TRUE) - 1
+            if ("pHtrait" %in% strainOptions$randomParams) {
+                shifts = assignStrainTraits(numStrains, 1, strainOptions,
+                                            parName = "pHtrait", 
+                                            pHtrait = TRUE) - 1
+            }else{
+                shifts=rep(0,numStrains)
+            }
+                        
             for (i in 1:numStrains) {
                 mat[((g - 1) * numStrains + i), ] = pHcorners[microbeNames[g], ] + 
-                  shifts[i]
+                    shifts[i]
             }
         }
+
     }
+        
     
     return(mat)
 }

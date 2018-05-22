@@ -1,5 +1,5 @@
 #' Generic plotting showing results of microPop
-#' @param out Output from microPopModel()
+#' @param soln ODE output from microPopModel() i.e. matrix out$solution 
 #' @param numR Scalar. Number of resources
 #' @param numStrains Scalar. Number of strains per group
 #' @param microbeNames Vector of strings which contains the names of the microbial groups in the system e.g. c('Bacteroides','Acetogens')
@@ -13,7 +13,7 @@
 #' @importFrom grDevices dev.copy2eps dev.copy2pdf dev.new rainbow tiff dev.print png
 #' @importFrom graphics legend lines par plot
 #' @export
-quickPlot = function(out, numR, numStrains, microbeNames, yLabel, xLabel, sumOverStrains, 
+quickPlot= function(soln, numR, numStrains, microbeNames, yLabel, xLabel, sumOverStrains, 
     saveFig = FALSE, figType = "eps", figName = "microPopFig") {
     
     wlen = 7
@@ -21,17 +21,17 @@ quickPlot = function(out, numR, numStrains, microbeNames, yLabel, xLabel, sumOve
     
     numMFG = length(microbeNames)
     numM = numStrains * numMFG
-    time = out[, 1]
+    time = soln[, 1]
     
     if (numM == 1) {
         # one strain and one group (need to keep as a matrix)
-        X = as.matrix(out[, 2:(numM + 1)])
-        colnames(X) = colnames(out)[2]
+        X = as.matrix(soln[, 2:(numM + 1)])
+        colnames(X) = colnames(soln)[2]
     } else {
-        X = out[, 2:(numM + 1)]
+        X = soln[, 2:(numM + 1)]
     }
     
-    R = out[, (numM + 2):(numM + numR + 1), drop = FALSE]
+    R = soln[, (numM + 2):(numM + numR + 1), drop = FALSE]
     
     if (numStrains > 1 & sumOverStrains) {
         gmat = matrix(NA, nrow = length(time), ncol = numMFG)

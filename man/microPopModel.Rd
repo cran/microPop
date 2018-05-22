@@ -101,4 +101,3 @@ out=microPopModel(
     microbeSysInfo=data.frame(Mmat,stringsAsFactors=FALSE)
 )
 }
-
