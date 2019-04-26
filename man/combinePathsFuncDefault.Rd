@@ -5,7 +5,8 @@
 \alias{combinePathsFunc}
 \title{Combine microbial growth on different pathways by one microbe}
 \usage{
-combinePathsFuncDefault(strainName, groupName, growthRate, num.paths, pathNames)
+combinePathsFuncDefault(strainName, groupName, growthRate, num.paths,
+  pathNames)
 }
 \arguments{
 \item{strainName}{Name of the strain that is being looped through in the ODE solver}

@@ -5,7 +5,8 @@
 \alias{massBalanceFunc}
 \title{mass balance Function}
 \usage{
-massBalanceFuncDefault(uptake, production, growthRate, balanceTol, strainName)
+massBalanceFuncDefault(uptake, production, growthRate, balanceTol,
+  strainName)
 }
 \arguments{
 \item{uptake}{Matrix (with names) where columns are resources and rows are pathways, giving uptake rate (mass/time) of given strain}

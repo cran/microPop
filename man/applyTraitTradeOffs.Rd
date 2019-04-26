@@ -5,8 +5,8 @@
 \title{Internal function to trade off one trait against another (used when
 assigning randomly generated strain traits)}
 \usage{
-applyTraitTradeOffs(microbeNames, tradeOffParams, numPaths, numStrains, Pmats,
-  resourceNames)
+applyTraitTradeOffs(microbeNames, tradeOffParams, numPaths, numStrains,
+  Pmats, resourceNames)
 }
 \arguments{
 \item{microbeNames}{Vector of strings which contains the names of

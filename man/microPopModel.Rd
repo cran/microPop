@@ -5,10 +5,11 @@
 \title{microPopModel}
 \usage{
 microPopModel(microbeNames, times, resourceSysInfo, microbeSysInfo,
-  rateFuncs = rateFuncsDefault, odeFunc = derivsDefault, numStrains = 1,
-  oneStrainRandomParams = FALSE, pHLimit = FALSE, pHVal = NA,
-  plotOptions = list(), odeOptions = list(), strainOptions = list(),
-  checkingOptions = list(), microbeMolarMass = 113, bacCutOff = 1e-14)
+  rateFuncs = rateFuncsDefault, odeFunc = derivsDefault,
+  numStrains = 1, oneStrainRandomParams = FALSE, pHLimit = FALSE,
+  pHVal = NA, plotOptions = list(), odeOptions = list(),
+  strainOptions = list(), checkingOptions = list(),
+  microbeMolarMass = 113, bacCutOff = 1e-14)
 }
 \arguments{
 \item{microbeNames}{Vector of strings which contains the names of the microbial groups in the system e.g. c('Bacteroides','Acetogens'). A dataframe for each of the same name must also exist in the workspace.}

@@ -9,8 +9,8 @@ since traits are assigned to all strains at once for one param they are
 stored in Mat[strain,res,path], this is then rearranged to make a matrix
 for each strain (mat[path,res]).}
 \usage{
-makeParamMatrixS(resNames, microbeNames, parameterName, numPaths, numStrains,
-  strainOptions, oneStrainRandomParams)
+makeParamMatrixS(resNames, microbeNames, parameterName, numPaths,
+  numStrains, strainOptions, oneStrainRandomParams)
 }
 \arguments{
 \item{resNames}{Vector of strings which contains the names of the resources in the system}

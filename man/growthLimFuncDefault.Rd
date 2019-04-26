@@ -5,8 +5,8 @@
 \alias{growthLimFunc}
 \title{growth rate limitation function}
 \usage{
-growthLimFuncDefault(strainName, groupName, pathName, varName, resourceValues,
-  allSubType, strainHalfSat, stateVarValues)
+growthLimFuncDefault(strainName, groupName, pathName, varName,
+  resourceValues, allSubType, strainHalfSat, stateVarValues)
 }
 \arguments{
 \item{strainName}{Name of the strain that is being looped through in the ODE solver}

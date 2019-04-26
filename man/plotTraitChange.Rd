@@ -5,8 +5,8 @@
 \title{plot changes in trait over time}
 \usage{
 plotTraitChange(out, trait.name, group.names, resource.name = NULL,
-  path = NULL, xlabel = "Time (days)", saveFig = FALSE, figType = "eps",
-  figName = "Traits")
+  path = NULL, xlabel = "Time (days)", saveFig = FALSE,
+  figType = "eps", figName = "Traits")
 }
 \arguments{
 \item{out}{Output from microPopModel()}

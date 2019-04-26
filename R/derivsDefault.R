@@ -132,8 +132,13 @@ derivsDefault = function(t, y, parms) {
                   
                   # compute uptake of water if it is a resource on this path
                   if (any(rtype.sub == "Sw")) {
-                    uptake.p[path, rtype.sub == "Sw"] = parms$Pmats$waterRatio[gname, 
-                      path] * sum(uptake.p[path, ], na.rm = TRUE)
+#                    uptake.p[path, rtype.sub == "Sw"] = parms$Pmats$waterRatio[gname, 
+#                      path] * sum(uptake.p[path, ], na.rm = TRUE)
+
+                      #Bug fix (25/4/2019)
+                      uptake.p[path, names(rtype.sub)[rtype.sub=='Sw']] = parms$Pmats$waterRatio[gname,path] *
+                          sum(uptake.p[path, ], na.rm = TRUE)
+
                   }
                   
                   # compute production on this path (metabolites only - not

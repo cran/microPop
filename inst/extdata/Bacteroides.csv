@@ -11,5 +11,5 @@ Rtype.2,none,S,X,X,P,P,P,P,P,P
 halfSat.2,g/l,0.001,NA,NA,NA,NA,NA,NA,NA,NA
 yield.2,g/g,0.2,NA,NA,NA,NA,NA,NA,NA,NA
 maxGrowthRate.2,/d,24,NA,NA,NA,NA,NA,NA,NA,NA
-stoichiom.2,mol,3,NA,NA,2,1,1,2,1,1
+stoichiom.2,mol,6,NA,NA,2,1,1,2,1,7
 keyResource.2,none,NA,,,,,,,,

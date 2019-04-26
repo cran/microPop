@@ -4,8 +4,9 @@
 \alias{quickPlot}
 \title{Generic plotting showing results of microPop}
 \usage{
-quickPlot(soln, numR, numStrains, microbeNames, yLabel, xLabel, sumOverStrains,
-  saveFig = FALSE, figType = "eps", figName = "microPopFig")
+quickPlot(soln, numR, numStrains, microbeNames, yLabel, xLabel,
+  sumOverStrains, saveFig = FALSE, figType = "eps",
+  figName = "microPopFig")
 }
 \arguments{
 \item{soln}{ODE output from microPopModel() i.e. matrix out$solution}
