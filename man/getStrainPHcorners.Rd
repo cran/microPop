@@ -5,7 +5,7 @@
 \title{get stochastically generated pH corners for each strain}
 \usage{
 getStrainPHcorners(microbeNames, allStrainNames, numStrains, pHcorners,
-  pHLimit, strainOptions)
+  pHLimit, strainOptions, oneStrainRandomParams)
 }
 \arguments{
 \item{microbeNames}{(vector of strings). Names of microbes in the system}
@@ -14,11 +14,13 @@ getStrainPHcorners(microbeNames, allStrainNames, numStrains, pHcorners,
 
 \item{numStrains}{Integer}
 
-\item{pHcorners}{vector of 4 scalars definining the pH lim func}
+\item{pHcorners}{vector of 4 scalars defining the pH lim func}
 
 \item{pHLimit}{(logical) Is microbial growth affected by pH?}
 
 \item{strainOptions}{list from microPopModel inputs}
+
+\item{oneStrainRandomParams}{logical from microPopModel inputs}
 }
 \value{
 (matrix) values of the pH values of the limit function i.e.

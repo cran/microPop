@@ -1,0 +1,4 @@
+,units,M1,M2,M3
+startValue,g/l,1,1,1
+inflowRate,g/l/h,0,0,0
+washOut,/h,0.1,0.1,0.1

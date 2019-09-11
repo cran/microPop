@@ -28,6 +28,7 @@ test_that("Test Assign Strain Traits for non pH traits",{
                          0.1*meanT*strainOptions$percentTraitRange/200)
         }
     }
+
     
 })
        
@@ -105,7 +106,6 @@ test_that("Test non pH corners bit of getStrainParametersFromFile.R",{
         expect_true(is.list(x))
         expect_equal(x[[1]][['maxGrowthRate']][['Bacteroides.1']][1,'NSP'],PARdata[1,3])
     
-    
 })
 
 
@@ -134,13 +134,17 @@ test_that("Test pH corners bit of getStrainParametersFromFile.R",{
 
 test_that("Test getStrainPHcorners.R",{
 
+    loadTestDataFunc(2)
+
     pHcorners = getPHcorners(microbeNames, pHLimit=TRUE)
     pHcorners[1,]=c(1,2,3,4)
     
+    oneStrainRandomParams=FALSE
+
     x=getStrainPHcorners(microbeNames,allStrainNames,numStrains,
         pHcorners,pHLimit=TRUE,
         strainOptions=list(randomParams='pHtrait',
-            distribution='uniform',maxPHshift=0.1))
+            distribution='uniform',maxPHshift=0.1),oneStrainRandomParams)
     
     expect_equal(dim(x),c(numStrains*length(microbeNames),4))
     expect_true(diff(range(x[1:numStrains,1]))<=0.2)
@@ -150,5 +154,25 @@ test_that("Test getStrainPHcorners.R",{
     expect_true(mean(x[1:numStrains,1])<=1.1)
     expect_true(mean(x[1:numStrains,2])>=1.9)
     expect_true(mean(x[1:numStrains,4])<=4.1)
+
+    expect_false(isTRUE(all.equal(x[1,],c(1,2,3,4))))
+
+    #check no shift if there is only one strain and oneStrainRandomParams=FALSE
+    x=getStrainPHcorners(microbeNames,allStrainNames,numStrains=1,
+                         pHcorners,pHLimit=TRUE,
+                         strainOptions=list(randomParams='pHtrait',
+                                            distribution='uniform',maxPHshift=0.1),oneStrainRandomParams)
+ 
+    expect_equal(x[1,],c(1,2,3,4))
+
+    #check there is a shift if there is only one strain and oneStrainRandomParams=TRUE
+    x=getStrainPHcorners(microbeNames,allStrainNames,numStrains=1,
+                         pHcorners,pHLimit=TRUE,
+                         strainOptions=list(randomParams='pHtrait',
+                                            distribution='uniform',maxPHshift=0.1),
+                         oneStrainRandomParams=TRUE)
+ 
+    expect_false(isTRUE(all.equal(x[1,],c(1,2,3,4))))
+ 
 
 })

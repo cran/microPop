@@ -15,7 +15,7 @@
 #' @param plotOptions List containing instructions for plotting: Default is list(plotFig=TRUE, sumOverStrains=FALSE, saveFig=FALSE, figType='eps', figName='microPopFig', yLabel='Concentration (g/L)', xLabel='Time').\cr
 #' To turn off plot generation set plotFig=FALSE. If there are multiple strains these are all plotted if sumOverStrains=FALSE, otherwise they will be summed over each group. To save plot, saveFig=TRUE, figType (format) can be 'eps','png', 'pdf' or 'tiff' and is specified in figType (string), the name is figName (string) to which the string 'Microbes' or 'Resources' will be added for the respective plots.
 #' @param odeOptions List containing instructions for the ODE solver ('deSolve'). Default: list('atol'=1e-6,'rtol'=1e-6,'method'='lsoda'). See ?ode for more details.
-#' @param strainOptions List containing instructions for specifying strain parameters. Default: list(randomParams=c('halfSat', 'yield', 'maxGrowthRate', 'pHtrait'), seed=1, distribution='uniform', percentTraitRange=10, maxPHshift=0.2, applyTradeOffs=FALSE, tradeOffParams=NULL, paramsSpecified=FALSE, paramDataName=NULL). 
+#' @param strainOptions List containing instructions for specifying strain parameters. Default: list(randomParams=c('halfSat', 'yield', 'maxGrowthRate', 'pHtrait'), seed=1, distribution='uniform', percentTraitRange=0, maxPHshift=0., applyTradeOffs=FALSE, tradeOffParams=NULL, paramsSpecified=FALSE, paramDataName=NULL). 
 #' \itemize{
 #' \item randomParams (vector) specifying which parameters need to be stochastically generated.
 #' \item seed (number) seed for random number generator.
@@ -90,7 +90,7 @@ microPopModel = function(microbeNames, times, resourceSysInfo, microbeSysInfo, r
     odeOptions.default = list(atol = 1e-06, rtol = 1e-06, method = "lsoda")
     
     strainOptions.default = list(randomParams = c("halfSat", "yield", "maxGrowthRate", 
-        "pHtrait"), seed = 1, distribution = "uniform", percentTraitRange = 10, maxPHshift = 0.2, 
+        "pHtrait"), seed = 1, distribution = "uniform", percentTraitRange = 0, maxPHshift = 0, 
         applyTradeOffs = FALSE, tradeOffParams = NULL, paramsSpecified = FALSE, paramDataName = NULL)
     
     checkingOptions.default = list(checkMassConv = FALSE, balanceTol = 0.01, reBalanceStoichiom = FALSE, 
@@ -236,7 +236,7 @@ microPopModel = function(microbeNames, times, resourceSysInfo, microbeSysInfo, r
 
     #assign pH strain traits
     strainPHcorners = getStrainPHcorners(microbeNames, allStrainNames, numStrains, 
-        pHcorners, pHLimit, strainOptions)
+        pHcorners, pHLimit, strainOptions,oneStrainRandomParams)
     
     nonBoostFrac = getNonBoostFrac(microbeNames, resourceNames, numPaths)
     # print(nonBoostFrac)

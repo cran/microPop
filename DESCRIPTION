@@ -1,8 +1,8 @@
 Package: microPop
 Type: Package
 Title: Modelling Microbial Populations
-Version: 1.4.1
-Date: 2019-04-26
+Version: 1.5
+Date: 2019-10-09
 Authors@R: person("Helen", "Kettle", email = "Helen.Kettle@bioss.ac.uk",role = c("aut", "cre"))
 Description: Modelling interacting microbial populations - example applications
     include human gut microbiota, rumen microbiota and phytoplankton. Solves a
@@ -28,16 +28,16 @@ Collate: 'applyTraitTradeOffs.R' 'assignNAsToMFGs.R'
         'getStrainParamsFromFile.R' 'getValues.R'
         'growthLimFuncDefault.R' 'makeInflowFromSoln.R'
         'makeParamMatrixG.R' 'makeParamMatrixS.R'
-        'massBalanceFuncDefault.R' 'microPop-internal.R'
-        'microPop-package.R' 'microPopModel.R' 'onAttach.R'
-        'pHFuncDefault.R' 'pHLimFuncDefault.R' 'pHcentreOfMass.R'
-        'plotTraitChange.R' 'productionFuncDefault.R' 'quickPlot.R'
+        'massBalanceFuncDefault.R' 'microPop-package.R'
+        'microPopModel.R' 'onAttach.R' 'pHFuncDefault.R'
+        'pHLimFuncDefault.R' 'pHcentreOfMass.R' 'plotTraitChange.R'
+        'productionFuncDefault.R' 'quickPlot.R'
         'removalRateFuncDefault.R' 'uptakeFuncDefault.R'
         'rateFuncsDefault.R' 'replaceListItems.R'
         'runMicroPopExample.R' 'subsetFunc.R' 'waterUptakeRatio.R'
 NeedsCompilation: no
-Packaged: 2019-04-26 14:01:39 UTC; helen
+Packaged: 2019-09-11 09:17:02 UTC; helen
 Author: Helen Kettle [aut, cre]
 Maintainer: Helen Kettle <Helen.Kettle@bioss.ac.uk>
 Repository: CRAN
-Date/Publication: 2019-04-26 14:50:03 UTC
+Date/Publication: 2019-09-11 09:50:02 UTC

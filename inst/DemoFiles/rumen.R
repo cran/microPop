@@ -6,9 +6,9 @@ microbeNames=c('Xsu','Xh2','Xaa')
 polymer.names=c('Zndf','Znsc','Zpro')
 
 #Need to add polymers as extra resources c('Zndf','Znsc','Zpro') to a microbe dataframe so that they become state variables
-Xsu[['Zndf']]=c('X',rep(NA,6))
-Xsu[['Znsc']]=c('X',rep(NA,6))
-Xsu[['Zpro']]=c('X',rep(NA,6))
+Xsu[['Zndf']]=c('X',rep(NA,(nrow(Xsu)-1)))
+Xsu[['Znsc']]=c('X',rep(NA,(nrow(Xsu)-1)))
+Xsu[['Zpro']]=c('X',rep(NA,(nrow(Xsu)-1)))
 
 time.hours=seq(0,3,1/(24*4))*24
 

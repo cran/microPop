@@ -37,7 +37,7 @@ To turn off plot generation set plotFig=FALSE. If there are multiple strains the
 
 \item{odeOptions}{List containing instructions for the ODE solver ('deSolve'). Default: list('atol'=1e-6,'rtol'=1e-6,'method'='lsoda'). See ?ode for more details.}
 
-\item{strainOptions}{List containing instructions for specifying strain parameters. Default: list(randomParams=c('halfSat', 'yield', 'maxGrowthRate', 'pHtrait'), seed=1, distribution='uniform', percentTraitRange=10, maxPHshift=0.2, applyTradeOffs=FALSE, tradeOffParams=NULL, paramsSpecified=FALSE, paramDataName=NULL). 
+\item{strainOptions}{List containing instructions for specifying strain parameters. Default: list(randomParams=c('halfSat', 'yield', 'maxGrowthRate', 'pHtrait'), seed=1, distribution='uniform', percentTraitRange=0, maxPHshift=0., applyTradeOffs=FALSE, tradeOffParams=NULL, paramsSpecified=FALSE, paramDataName=NULL). 
 \itemize{
 \item randomParams (vector) specifying which parameters need to be stochastically generated.
 \item seed (number) seed for random number generator.

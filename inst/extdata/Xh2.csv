@@ -5,4 +5,3 @@ yield,g/g,0.0904,NA,NA,NA,NA
 maxGrowthRate,/h,0.0223,NA,NA,NA,NA
 stoichiom,moles,1,0.0016,0.246,0.254,0.0016
 keyResource,none,Sh2,,,,
-pHcorners,pHunits,0,0,10,10,

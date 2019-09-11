@@ -89,22 +89,22 @@ test_that("Test getAllResources.R",{
 
     loadTestDataFunc(1)
 
-    x=getAllResources(microbeNames)
+    x=getAllResources('Archea')
+    expect_true(all(is.character(x)))
     expect_true(is.vector(x))
     expect_equal(length(x),4)
     expect_equal(x,resourceNames)
 
-})
 
-test_that('Test getAllResources.R',{
+    #test what happens if pH corners row is longer than ncol
+    file=paste(system.file("testdata",package="microPop"),'/MFG1.csv',sep='')
+    M1<<-createDF(file)
     
-    loadTestDataFunc(1)
-
-    x=getAllResources('Archea')
-    
-    expect_true(all(is.character(x)))
-    expect_equal(length(x),4)
-    expect_equal(x,resourceNames)
+    x=getAllResources('M1')
+    expect_true(is.vector(x))
+    expect_equal(length(x),2)
+    expect_equal(x,c('S1','P1'))
+   
 
 })
 
