@@ -1,5 +1,4 @@
 #human colon 2
-#Note not all NSP is useable therefore must adjust input values so just put in useable amount
 #Look at 3 MFGs: 'Bacteroides','NoButyStarchDeg','Acetogens'
 #Dependence of microbial growth on pH is included and pH changes from 5.5 to 6.5 halfway through the simulation time
 

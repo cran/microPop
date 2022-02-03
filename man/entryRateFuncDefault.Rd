@@ -5,8 +5,14 @@
 \alias{entryRateFunc}
 \title{entry Rate Function}
 \usage{
-entryRateFuncDefault(varName, varValue, stateVarValues, time, inflowRate,
-  parms)
+entryRateFuncDefault(
+  varName,
+  varValue,
+  stateVarValues,
+  time,
+  inflowRate,
+  parms
+)
 }
 \arguments{
 \item{varName}{(string) Name of state variable of interest (resource name or strain name)}

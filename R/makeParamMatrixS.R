@@ -9,7 +9,7 @@
 #' @param microbeNames Vector of strings which contains the names of the microbial groups in the system e.g. c('Bacteroides','Acetogens')
 #' @param parameterName Name of parameter
 #' @param numPaths Named vector. Number of paths for each microbial group
-#' @param numStrains Scalar. Number of strains per group
+#' @param numStrains Integer or named vector of integers. Number of strains per group
 #' @param strainOptions List of strain options
 #' @param oneStrainRandomParams Logical. TRUE for randomized params even if there is only one strain.
 #' @return A list called parameterName which contains matrices for all strains (in all groups) with paths on rows and resources on columns
@@ -27,10 +27,14 @@ makeParamMatrixS = function(resNames, microbeNames, parameterName, numPaths, num
         
         Lr = length(resNames)
         Lp = numPaths[gname]
-        Ls = numStrains
+        if (length(numStrains)>1){
+            Ls = numStrains[gname]
+        }else{
+            Ls = numStrains
+        }
         
         # assign strain names to str.names
-        if (numStrains == 1) {
+        if (length(numStrains)==1 & Ls == 1) {
             str.names = gname
         } else {
             str.names = paste(gname, ".", seq(1, Ls), sep = "")
@@ -68,13 +72,13 @@ makeParamMatrixS = function(resNames, microbeNames, parameterName, numPaths, num
                   
                   pval = as.numeric(data[var, rname])
                   
-                  if (numStrains > 1 | oneStrainRandomParams) {
+                  if (Ls > 1 | oneStrainRandomParams) {
                     
                     if (parameterName %in% strainOptions$randomParams) {
-                      traitVals = assignStrainTraits(numStrains, pval, strainOptions, 
-                        parameterName, pHtrait = FALSE)
+                      traitVals = assignStrainTraits(Ls, pval, strainOptions, 
+                        parameterName, pHtrait = FALSE, gname)
                     } else {
-                      traitVals = pval * rep(1, numStrains)
+                      traitVals = pval * rep(1, Ls)
                     }
                     
                     Mat[, r, path] = traitVals
@@ -94,12 +98,12 @@ makeParamMatrixS = function(resNames, microbeNames, parameterName, numPaths, num
         }  #path
         
         # make matrix for each strain
-        for (s in 1:numStrains) {
+        for (s in 1:Ls) {
             mat = matrix(NA, nrow = Lp, ncol = Lr, dimnames = list(path.names, resNames))
             for (p in 1:Lp) {
                 mat[p, ] = Mat[s, , p]
             }
-            if (numStrains == 1) {
+            if (length(numStrains)==1 & Ls == 1) {
                 mat.name = gname
             } else {
                 mat.name = paste(gname, ".", s, sep = "")

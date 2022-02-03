@@ -33,7 +33,9 @@ mutation.frac=rep(0,length(allMicrobeNames)); names(mutation.frac)=allMicrobeNam
 myRateFuncs=rateFuncsDefault
 
 myRateFuncs$growthLimFunc=function(strainName,groupName,pathName,
-                                   varName,resourceValues,allSubType,strainHalfSat,stateVarValues){
+    varName,resourceValues,allSubType,
+    strainHalfSat,stateVarValues,parms){
+    
     #Returns the value of growthLim (must lie in interval [0,1] i.e. unitless) which is used to scale the maximum growth rate
     
     if (resourceValues[varName]<=0){
@@ -60,12 +62,12 @@ myRateFuncs$entryRateFunc=function(varName,varValue,
     }else{
         v.in=inflowRate[varName]
     }
-
-    #add in mutations from Bacteria1 to resistant group resistantBacteria1
+    
+                                        #add in mutations from Bacteria1 to resistant group resistantBacteria1
     vr=0
     if (gname=='resistantBacteria1'){vr=fB*stateVarValues['Bacteria1']}
     if (gname=='Bacteria1'){vr=-fB*stateVarValues['Bacteria1']}
-        
+    
     return(v.in+vr)
 }
 
@@ -78,7 +80,7 @@ if (run==4){groupNums=c(1,2,3,4,5); fB=0.001}
 
 microbeNames=allMicrobeNames[groupNums]
 if (run==4){mutation.frac['Bacteria1']=-0.001
-    mutation.frac['resistantBacteria1']=0.001}
+            mutation.frac['resistantBacteria1']=0.001}
 
 out=microPopModel(
     microbeNames=microbeNames,
@@ -88,7 +90,7 @@ out=microPopModel(
     rateFuncs=myRateFuncs,
     checkingOptions=list(checkStoichiomBalance=FALSE),
     plotOptions=list(yLabel='Number of cells',saveFig=FALSE,
-                     figType='eps',figName=paste('Virus',run,sep='')),
+        figType='eps',figName=paste('Virus',run,sep='')),
         odeOptions=list('atol'=1e-8,'rtol'=1e-8)
 )
     

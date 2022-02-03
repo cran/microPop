@@ -5,8 +5,7 @@
 \alias{removalRateFunc}
 \title{Removal Rate Function}
 \usage{
-removalRateFuncDefault(varName, varValue, stateVarValues, time, washOut,
-  parms)
+removalRateFuncDefault(varName, varValue, stateVarValues, time, washOut, parms)
 }
 \arguments{
 \item{varName}{(string) Name of state variable of interest (this is group name

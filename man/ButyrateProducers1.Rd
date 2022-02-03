@@ -4,7 +4,9 @@
 \name{ButyrateProducers1}
 \alias{ButyrateProducers1}
 \title{ButyrateProducers1 dataframe}
-\format{dataframe}
+\format{
+dataframe
+}
 \usage{
 ButyrateProducers1
 }

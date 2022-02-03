@@ -4,7 +4,9 @@
 \name{microbeSysInfo}
 \alias{microbeSysInfo}
 \title{microbeSysInfo}
-\format{A dataframe with the row names in the itemised list below and a column for units (optional) and for each microbial functional group (MFG) in the system to be simulated.}
+\format{
+A dataframe with the row names in the itemised list below and a column for units (optional) and for each microbial functional group (MFG) in the system to be simulated.
+}
 \usage{
 microbeSysInfo
 }

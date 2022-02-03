@@ -2,6 +2,7 @@
 #' @param array.in Original array
 #' @param gname Group name (string)
 #' @param path Path name (string)
+#' @export
 #' @return named vector or array
 #' @keywords internal
 subsetFunc = function(array.in, gname, path) {

@@ -12,6 +12,7 @@
 
 pHLimFuncDefault = function(strainName, groupName, pH, parms) {
     pHcorners = parms$strainPHcorners[strainName, ]
+    #print(pHcorners)
 
     #error check inputs:
     if (is.na(sum(pHcorners))){

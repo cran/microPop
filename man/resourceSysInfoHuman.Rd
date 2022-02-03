@@ -4,7 +4,9 @@
 \name{resourceSysInfoHuman}
 \alias{resourceSysInfoHuman}
 \title{resourceSysInfoHuman dataframe}
-\format{dataframe}
+\format{
+dataframe
+}
 \usage{
 resourceSysInfoHuman
 }

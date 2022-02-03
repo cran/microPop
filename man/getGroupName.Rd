@@ -3,7 +3,8 @@
 \name{getGroupName}
 \alias{getGroupName}
 \title{Convert strain name to its group name
-e.g. 'Bacteroides.1' becomes 'Bacteroides'}
+e.g. 'Bacteroides.1' becomes 'Bacteroides'
+updated (Dec 2019) so that MFG names can contain dots}
 \usage{
 getGroupName(xname, microbeNames)
 }
@@ -18,4 +19,5 @@ group name (string) if xname is a strain name. If xname is not a the name of a s
 \description{
 Convert strain name to its group name
 e.g. 'Bacteroides.1' becomes 'Bacteroides'
+updated (Dec 2019) so that MFG names can contain dots
 }

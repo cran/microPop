@@ -4,7 +4,9 @@
 \name{PropionateProducers}
 \alias{PropionateProducers}
 \title{PropionateProducers dataframe}
-\format{dataframe}
+\format{
+dataframe
+}
 \usage{
 PropionateProducers
 }

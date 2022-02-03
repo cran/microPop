@@ -4,7 +4,9 @@
 \name{Methanogens}
 \alias{Methanogens}
 \title{Methanogens dataframe}
-\format{dataframe}
+\format{
+dataframe
+}
 \usage{
 Methanogens
 }

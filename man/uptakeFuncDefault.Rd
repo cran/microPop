@@ -5,9 +5,22 @@
 \alias{uptakeFunc}
 \title{Uptake Function}
 \usage{
-uptakeFuncDefault(strainName, groupName, pathName, varName, keyResName,
-  subst, ess, boost, maxGrowthRate, growthLim, yield, nonBoostFrac,
-  stoichiom, parms)
+uptakeFuncDefault(
+  strainName,
+  groupName,
+  pathName,
+  varName,
+  keyResName,
+  subst,
+  ess,
+  boost,
+  maxGrowthRate,
+  growthLim,
+  yield,
+  nonBoostFrac,
+  stoichiom,
+  parms
+)
 }
 \arguments{
 \item{strainName}{Name of the strain that is being looped through in the ODE solver}

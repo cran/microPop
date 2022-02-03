@@ -1,27 +1,27 @@
-#' microPopModel
-#'
 #' Runs the microbial population model
 #'
+#' creates a system of ordinary differential equations and solves them
+#' 
 #' @param microbeNames Vector of strings which contains the names of the microbial groups in the system e.g. c('Bacteroides','Acetogens'). A dataframe for each of the same name must also exist in the workspace.
 #' @param times Vector of times at which the solution is required, e.g. seq(0,10,0.1)
 #' @param resourceSysInfo String giving the name of a csv file or a dataframe object, which describes the initial conditions, inflow and outflow (if constant) and molar mass of each resource. See help(resourceSysInfo) for more info.
 #' @param microbeSysInfo String giving the name of a csv file (e.g. 'systemInfoMicrobes.csv') or a dataframe object, which describes the initial conditions, inflow and outflow (if constant) of each microbial group. See help(microbeSysInfo) for more info. 
 #' @param rateFuncs A list of functions which are used to solve the ODEs in odeFunc. Default is rateFuncsDefault.R (provided in the package). See ?rateFuncs
 #' @param odeFunc The function the ODE solver will use - the default is derivsDefault provided by the package but if the user wants to make significant changes a new ODE function file can be used. See ?derivsDefault
-#' @param numStrains Integer stating the number of strains in each microbial group (same for all groups). Default is 1.
+#' @param numStrains Integer (or named vector of integers) stating the number of strains in each microbial group. If this is a single number it is the same for all groups. If it is a vector it must be named using microbeNames. Default is 1.
 #' @param oneStrainRandomParams Logical to allow randomization of parameters even if there is only one strain. The default is FALSE which means that if numStrains=1 then the group params are used; if numStrains>1 then the parameters are automatically randomised according to info given in strainOptions. If oneStrainRandomParams=TRUE then even if there is only one strain its parameters will be randomised according to info given in strainOptions. 
 #' @param pHLimit TRUE if pH limits microbial growth rates. Default is FALSE. If TRUE then rateFuncs$pHLimFunc is called.
 #' @param pHVal Scalar. If the pH value is fixed it can be specified here and this is then used in the default rateFuncs$pHFunc function.
-#' @param plotOptions List containing instructions for plotting: Default is list(plotFig=TRUE, sumOverStrains=FALSE, saveFig=FALSE, figType='eps', figName='microPopFig', yLabel='Concentration (g/L)', xLabel='Time').\cr
+#' @param plotOptions List containing instructions for plotting: Default is list(plotFig=TRUE, sumOverStrains=FALSE, resourceLegendPosition="topleft", microbeLegendPosition="topleft", saveFig=FALSE, figType='eps', figName='microPopFig', yLabel='Concentration (g/L)', xLabel='Time').\cr
 #' To turn off plot generation set plotFig=FALSE. If there are multiple strains these are all plotted if sumOverStrains=FALSE, otherwise they will be summed over each group. To save plot, saveFig=TRUE, figType (format) can be 'eps','png', 'pdf' or 'tiff' and is specified in figType (string), the name is figName (string) to which the string 'Microbes' or 'Resources' will be added for the respective plots.
 #' @param odeOptions List containing instructions for the ODE solver ('deSolve'). Default: list('atol'=1e-6,'rtol'=1e-6,'method'='lsoda'). See ?ode for more details.
-#' @param strainOptions List containing instructions for specifying strain parameters. Default: list(randomParams=c('halfSat', 'yield', 'maxGrowthRate', 'pHtrait'), seed=1, distribution='uniform', percentTraitRange=0, maxPHshift=0., applyTradeOffs=FALSE, tradeOffParams=NULL, paramsSpecified=FALSE, paramDataName=NULL). 
+#' @param strainOptions List containing instructions for specifying strain parameters. Default: list(randomParams=c('halfSat', 'yield', 'maxGrowthRate', 'pHtrait'), seed=1, distribution='uniform', percentTraitRange=0, maxPHshift=0, applyTradeOffs=FALSE, tradeOffParams=NULL, paramsSpecified=FALSE, paramDataName=NULL). 
 #' \itemize{
 #' \item randomParams (vector) specifying which parameters need to be stochastically generated.
 #' \item seed (number) seed for random number generator.
 #' \item distribution (string) - either 'uniform' or 'normal' specifying the shape of the distribution from which to draw the random strain parameters. 
-#'\item percentTraitRange (number) this is the percentage either side of the group parameter value which the strain parameter may range e.g. if percentTraitRange=10 then range is 0.9x to 1.1x for group mean x. 
-#'\item maxPHshift (number) pH units to range over.
+#'\item percentTraitRange (single number or named vector of numbers) this is the percentage either side of the group parameter value which the strain parameter may range e.g. if percentTraitRange=10 then range is 0.9x to 1.1x for group mean x. This can be specified for each microbial data file in microbeNames using a named vector, however, if only one number is given it is assumed to apply to all microbes.
+#'\item maxPHshift (number) pH units to range over (either one value which is applied to all microbe groups or a named vector with a value for each group and microbeNames for its names).
 #' \item applyTradeOffs (logical) to trade off `good' and `bad' parameter values. 
 #'\item tradeOffParams (vector of two strings) - parameters to trade off against each other. Note that pHtrait can not be traded off as whether this trait is good or bad depends on the environmental pH.
 #'\item paramsSpecified (logical) TRUE if strain parameters are read in from a file (whose name is specified in paramDataName). The file must have colnames c(strainName, paramName, paramVal, paramUnit, resource,path) and where strainName is in format 'groupName.i' where i is the strain number.
@@ -34,6 +34,11 @@
 #' }
 #' @param microbeMolarMass Scalar. Mass of 1 mole of microbes - default is 113g/mol (Batstone et al., 2002)
 #' @param bacCutOff Scalar. Amount of bacteria below which the bacteria are considered to have left the system and can't grow, default =1e-14. If this is set to zero then bacteria will always be able to grow again as zero is never reached.
+#' @param networkAnalysis Logical. If you want to use the network analysis functions on your model results set as TRUE (default is FALSE)
+#' @param myPars List containing extra parameter values - used if gutModel is TRUE i.e. with microPopGut package
+#' @param ... Add your own input arguments
+
+
 #' @return The output is a list containing a matrix called 'solution' where rows are points in time and the columns are the state variables, and another list called parms which contains all the information needed to run the model. Within parms there are a number of other lists (e.g. Pmats for parameter values and Smats for system settings etc - try names(out$parms)).
 
 #' @examples
@@ -73,19 +78,39 @@
 #' )
 
 #' @export
+microPopModel = function(microbeNames, times, resourceSysInfo, microbeSysInfo,
+    rateFuncs = rateFuncsDefault, 
+    odeFunc = derivsDefault,
+    numStrains = 1,
+    oneStrainRandomParams = FALSE,
+    pHLimit = FALSE, 
+    pHVal = NA,
+    plotOptions = list(),
+    odeOptions = list(),
+    strainOptions = list(), 
+    checkingOptions = list(),
+    microbeMolarMass = 113,
+    bacCutOff = 1e-14,
+    networkAnalysis=FALSE,
+    myPars=NULL,...) {
+    
 
-microPopModel = function(microbeNames, times, resourceSysInfo, microbeSysInfo, rateFuncs = rateFuncsDefault, 
-    odeFunc = derivsDefault, numStrains = 1, oneStrainRandomParams = FALSE, pHLimit = FALSE, 
-    pHVal = NA, plotOptions = list(), odeOptions = list(), strainOptions = list(), 
-    checkingOptions = list(), microbeMolarMass = 113, bacCutOff = 1e-14) {
-    
-    
+    if (!methods::hasArg(gutModel)){
+       # print('no arg gutModel')
+        gutModel=FALSE
+    }else{
+        print('using microPopGut')
+        gutModel=TRUE
+    }
+
     # check Input Args: need to do some checks on the rateFuncs need a check so that
     # all substrates have halfsat, yield and max growth rate above zero
     #----------------
     # replace items in list specified by user
     plotOptions.default = list(yLabel = "Concentration (g/L)", xLabel = "Time", plotFig = TRUE, 
-        sumOverStrains = FALSE, saveFig = FALSE, figType = "eps", figName = "microPopFig")
+        sumOverStrains = FALSE, resourceLegendPosition="topleft",
+        microbeLegendPosition="topleft",
+        saveFig = FALSE, figType = "eps", figName = "microPopFig")
     
     odeOptions.default = list(atol = 1e-06, rtol = 1e-06, method = "lsoda")
     
@@ -159,15 +184,21 @@ microPopModel = function(microbeNames, times, resourceSysInfo, microbeSysInfo, r
     # assign strain names
     allStrainNames = NULL
     for (gname in microbeNames) {
-        if (numStrains == 1) {
-            allStrainNames = c(allStrainNames, gname)
-        } else {
-            allStrainNames = c(allStrainNames, paste(gname, ".", seq(1, numStrains), 
+        
+        if (length(numStrains)==1){
+            if (numStrains == 1) {
+                allStrainNames = c(allStrainNames, gname)
+            }else{
+                allStrainNames = c(allStrainNames, paste(gname, ".", seq(1, numStrains), 
+                    sep = ""))
+            }
+        }else{
+            allStrainNames = c(allStrainNames, paste(gname, ".", seq(1, numStrains[gname]), 
                 sep = ""))
         }
     }
     
-    resourceNames = getAllResources(microbeNames)
+    resourceNames = getAllResources(microbeNames,gutModel,myPars)
     checkResInfo(resourceNames, sysInfoRes)  #check resources are in SysInfo
     numPaths = getNumPaths(microbeNames)
     keyRes = getKeyRes(microbeNames, numPaths)
@@ -196,7 +227,7 @@ microPopModel = function(microbeNames, times, resourceSysInfo, microbeSysInfo, r
             numPaths, sysInfoRes, microbeMolarMass, resourceNames))
     }
     
-    if (numStrains > 1 & any(Rtype == "Sm", na.rm = TRUE)) {
+    if (any(numStrains > 1) & any(Rtype == "Sm", na.rm = TRUE)) {
         stop("MICROPOP ERROR: can not have multiple strains when there are microbial substrates - sorry!")
     }
     
@@ -206,7 +237,6 @@ microPopModel = function(microbeNames, times, resourceSysInfo, microbeSysInfo, r
         assign(sysNames[i], getValues(sysInfoMicrobes, sysInfoRes, stateVarNames.g, 
             sysNames[i], allStrainNames, microbeNames, resourceNames, numStrains))
     }
-    
     
     if (checkingOptions$checkStoichiomBalance) {
         stoichiom = checkStoichiom(stoichiom, Rtype, microbeNames, numPaths, as.numeric(checkingOptions$stoiTol), 
@@ -227,20 +257,24 @@ microPopModel = function(microbeNames, times, resourceSysInfo, microbeSysInfo, r
     
     # once params halfSat, maxGrowthRate, yield have been assigned then can implement
     # trade offs.
-    if (strainOptions$applyTradeOffs & numStrains > 1) {
+    if (strainOptions$applyTradeOffs & any(numStrains > 1)) {
         Pmats = applyTraitTradeOffs(microbeNames, strainOptions$tradeOffParams, numPaths, 
             numStrains, Pmats, resourceNames)
     }
-    
+
     pHcorners = getPHcorners(microbeNames, pHLimit)
 
+#    print(pHcorners)
+    
     #assign pH strain traits
     strainPHcorners = getStrainPHcorners(microbeNames, allStrainNames, numStrains, 
         pHcorners, pHLimit, strainOptions,oneStrainRandomParams)
+
+#    print(strainPHcorners)
     
     nonBoostFrac = getNonBoostFrac(microbeNames, resourceNames, numPaths)
     # print(nonBoostFrac)
-    
+
     # now need to read in parameter values from file if required overwrite param vals
     # with those from file if required
     if (strainOptions$paramsSpecified) {
@@ -249,22 +283,73 @@ microPopModel = function(microbeNames, times, resourceSysInfo, microbeSysInfo, r
         strainPHcorners = nps[[2]]
     }
     
-    
+
     # add in the parameter list that is passed into the ODE solver
-    paramList = append(list(keyRes = keyRes, numPaths = numPaths, allStrainNames = allStrainNames, 
-        resourceNames = resourceNames, microbeNames = microbeNames, numStrains = numStrains, 
-        Pmats = Pmats, Smats = Smats, strainPHcorners = strainPHcorners, nonBoostFrac = nonBoostFrac, 
-        pHLimit = pHLimit, pHVal = pHVal, molarMass = molarMass, bacCutOff = bacCutOff, 
-        balanceTol = checkingOptions$balanceTol, checkMassConv = checkingOptions$checkMassConv), 
+    paramList = append(list(keyRes = keyRes, numPaths = numPaths,
+        allStrainNames = allStrainNames, 
+        resourceNames = resourceNames, microbeNames = microbeNames,
+        numStrains = numStrains, 
+        Pmats = Pmats, Smats = Smats, strainPHcorners = strainPHcorners,
+        nonBoostFrac = nonBoostFrac, 
+        pHLimit = pHLimit, pHVal = pHVal, molarMass = molarMass,
+        bacCutOff = bacCutOff, 
+        balanceTol = checkingOptions$balanceTol,
+        checkMassConv = checkingOptions$checkMassConv,
+        times=times,
+        networkAnalysis=networkAnalysis,
+        myPars=myPars),
         rateFuncs)
     
     print("Set up completed, ODE solver called...")
     
     # run model - atm just using one ODE solver ptm=proc.time()
-    out.ode = ode(y = startValue, times = times, func = odeFunc, parms = paramList, rtol = odeOptions$rtol, 
+    out.ode1 = ode(y = startValue, times = times, func = odeFunc,
+        parms = paramList, rtol = odeOptions$rtol, 
         atol = odeOptions$atol, method = odeOptions$method)
     # print(proc.time()-ptm)
-    
+    #print('ODEs solved')
+
+        if (networkAnalysis){
+
+            if ('pH'%in%colnames(out.ode1)){
+            #Jan 2022 have added pH to ode output so add 1
+                conc.block.length=1+length(allStrainNames)+length(resourceNames)+1
+            }else{
+                conc.block.length=1+length(allStrainNames)+length(resourceNames)
+            }
+        
+        out.ode=out.ode1[,1:conc.block.length]
+
+        flow.block.length=length(resourceNames)*length(allStrainNames)*max(numPaths)
+        
+        flow.uptake=out.ode1[,(conc.block.length+1):(conc.block.length+flow.block.length)]
+ 
+        flow.production=out.ode1[,(conc.block.length+flow.block.length+1):(conc.block.length+2*flow.block.length)]
+
+        
+        vnames=rep(NA,length(allStrainNames)*length(resourceNames)*max(numPaths))
+        ct=1
+        for (sn in 1:length(allStrainNames)){
+            for (rn in 1:length(resourceNames)){
+                for (pn in 1:max(numPaths)){
+                    vnames[ct]=paste(allStrainNames[sn],'.',resourceNames[rn],'.path',pn,sep='')
+                    ct=ct+1
+                }
+            }
+        }
+
+        colnames(flow.uptake)=vnames
+        colnames(flow.production)=vnames
+        
+        final.out=list(solution = out.ode, parms = paramList,
+                       flow.uptake=flow.uptake,flow.production=flow.production)
+
+    }else{
+        out.ode=out.ode1
+        final.out=list(solution = out.ode, parms = paramList)
+
+    }
+
     # checksolution does not contain zeros
     if (checkingOptions$checkForNegs) {
         checkSolution(out.ode, checkingOptions$negTol)
@@ -272,11 +357,17 @@ microPopModel = function(microbeNames, times, resourceSysInfo, microbeSysInfo, r
     
     # plot figs
     if (plotOptions$plotFig) {
-        quickPlot(out.ode, length(resourceNames), numStrains, microbeNames, plotOptions$yLabel, 
-            plotOptions$xLabel, plotOptions$sumOverStrains, plotOptions$saveFig, 
-            plotOptions$figType, plotOptions$figName)
+        quickPlot(soln=out.ode, numR=length(resourceNames), numStrains=numStrains,
+                  microbeNames=microbeNames, yLabel=plotOptions$yLabel, 
+                  xLabel=plotOptions$xLabel, sumOverStrains=plotOptions$sumOverStrains,
+                  resourceLegendPosition=plotOptions$resourceLegendPosition,
+                  microbeLegendPosition=plotOptions$microbeLegendPosition,
+                  saveFig=plotOptions$saveFig, 
+                  figType=plotOptions$figType, figName=plotOptions$figName)
     }
     
-    return(list(solution = out.ode, parms = paramList))
+    return(final.out)
+
 }
 
+  

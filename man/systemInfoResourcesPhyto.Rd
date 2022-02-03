@@ -4,7 +4,9 @@
 \name{systemInfoResourcesPhyto}
 \alias{systemInfoResourcesPhyto}
 \title{systemInfoResourcesPhyto dataframe}
-\format{dataframe}
+\format{
+dataframe
+}
 \usage{
 systemInfoResourcesPhyto
 }

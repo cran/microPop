@@ -5,7 +5,7 @@
 #' @export
 
 derivsDefault = function(t, y, parms) {
-    
+
     halfSat = parms$Pmats$halfSat
     yield = parms$Pmats$yield
     maxGrowthRate = parms$Pmats$maxGrowthRate
@@ -28,46 +28,71 @@ derivsDefault = function(t, y, parms) {
     
     dR.g = array(0, dim = c(length(parms$microbeNames), numR), dimnames = list(parms$microbeNames, 
         parms$resourceNames))
+
+    #uptakeList=list(parms$allStrainNames)
+    #productionList=list(parms$allStrainNames)
+    uptake.row=NULL
+    production.row=NULL
+
     
     for (gname in parms$microbeNames) {
         # group loop
         
-        # print(gname)
-        
-        if (parms$numStrains == 1) {
-            strainNames = gname
-        } else {
-            strainNames = paste(gname, ".", seq(1, parms$numStrains), sep = "")
+        #print(gname)
+        if (length(parms$numStrains)==1){
+            Ls=parms$numStrains
+            if (Ls==1){
+                strainNames.group=gname
+            }else{
+                strainNames.group=paste(gname,seq(1,Ls),sep='.')
+            }
+        }else{
+            Ls=parms$numStrains[gname]
+            strainNames.group=paste(gname,seq(1,Ls),sep='.')
         }
-        
+            
         pathNames = paste("path", seq(1, parms$numPaths[gname]), sep = "")
         
-        dR.s = matrix(0, ncol = numR, nrow = parms$numStrains, dimnames = list(strainNames, 
+        dR.s = matrix(0, ncol = numR, nrow = Ls, dimnames = list(strainNames.group, 
             parms$resourceNames))
+
         
-        for (str.name in strainNames) {
+        for (str.name in strainNames.group) {
             # strain loop
-            
-            # print(str.name)
-            if (X[str.name] > parms$bacCutOff) {
+            #print(str.name)
+
+             if (X[str.name] > parms$bacCutOff) {
                 
                 # storage
                 growthRate.p = NA * seq(1, parms$numPaths[gname])  #total growth rate (over all substrates) of strain s on each path 
                 names(growthRate.p) = pathNames
+
                 growthLim = matrix(NA, ncol = numR, nrow = parms$numPaths[gname], 
                   dimnames = list(pathNames, parms$resourceNames))
-                uptake.p = matrix(0, ncol = numR, nrow = parms$numPaths[gname], dimnames = list(pathNames, 
-                  parms$resourceNames))
-                production.p = matrix(0, ncol = numR, nrow = parms$numPaths[gname], 
-                  dimnames = list(pathNames, parms$resourceNames))
+
+#                uptake.p = matrix(0, ncol = numR, nrow = parms$numPaths[gname],
+ #                   dimnames = list(paste("path", seq(1, max(parms$numPaths)), sep = ""), parms$resourceNames))
+                uptake.p = matrix(0, ncol = numR, nrow = max(parms$numPaths),
+                                  dimnames = list(paste("path", seq(1, max(parms$numPaths)), sep = ""), parms$resourceNames))
+
                 
+                #production.p = matrix(0, ncol = numR, nrow = parms$numPaths[gname], 
+                #  dimnames = list(pathNames, parms$resourceNames))
+                production.p = matrix(0, ncol = numR, nrow = max(parms$numPaths),
+                    dimnames = list(paste("path", seq(1, max(parms$numPaths)), sep = ""),parms$resourceNames))
+
+                #pH
+                if ('stateVarValues'%in%names(formals(parms$pHFunc))){
+                    pH=parms$pHFunc(t, parms, y)
+                }else{
+                    pH=parms$pHFunc(t, parms)
+                }
+                    
                 # find pH limitation on growth for given strain (not path or resource dependent)
                 if (parms$pHLimit) {
-                  pHlim = parms$pHLimFunc(str.name, gname, parms$pHFunc(t, parms), 
-                    parms)
-                  # print(pHlim)
+                    pHlim = parms$pHLimFunc(str.name, gname, pH,parms)
                 } else {
-                  pHlim = 1
+                    pHlim = 1
                 }
                 
                 
@@ -78,7 +103,7 @@ derivsDefault = function(t, y, parms) {
                   extraGrowthLim = parms$extraGrowthLimFunc(str.name, gname, path, 
                     c(X, R), c(parms$allStrainNames, parms$resourceNames), t, parms)
                   
-                  # print(path)
+                   #print(path)
                   resnames = colnames(Rtype[gname, , path, drop = FALSE])
                   
                   subst = resnames[Rtype[gname, , path] == "S" | Rtype[gname, , path] == 
@@ -103,7 +128,7 @@ derivsDefault = function(t, y, parms) {
                   # specific growth limitation for each resource for this strain on this path
                   for (rname in all.substrates) {
                     growthLim[path, rname] = parms$growthLimFunc(str.name, gname, 
-                      path, rname, R, rtype.sub, halfsat.sub, y)
+                      path, rname, R, rtype.sub, halfsat.sub, y,parms)
                     if (is.na(growthLim[path, rname])) {
                       stop(paste("MICROPOP ERROR: growthLimFunc is returning NA for ", 
                         str.name, " growing on ", rname, ". (FYI halfSat value is ", 
@@ -141,8 +166,8 @@ derivsDefault = function(t, y, parms) {
 
                   }
                   
-                  # compute production on this path (metabolites only - not
-                  # biomass)-----------------------
+                  # compute production on this path (metabolites only - not biomass)-----------------------
+                  
                   for (rname in products) {
                     production.p[path, rname] = parms$productionFunc(str.name, gname, 
                       path, rname, all.substrates, parms$keyRes[[gname]][path], stoichiom.sub, 
@@ -157,9 +182,13 @@ derivsDefault = function(t, y, parms) {
                 path.frac = parms$combinePathsFunc(str.name, gname, growthRate.p, 
                   parms$numPaths[gname], pathNames)
                 growthRate.p = path.frac * growthRate.p
-                uptake.p = path.frac * uptake.p
-                production.p = path.frac * production.p
-                
+
+                pathFrac=rep(0,max(parms$numPaths))
+                pathFrac[1:parms$numPaths[gname]]=path.frac
+
+                uptake.p = pathFrac * uptake.p
+                production.p = pathFrac * production.p
+
                 # check mass balance for changes due to biological growth
                 if (parms$checkMassConv) {
                   parms$massBalanceFunc(uptake.p, production.p, growthRate.p, parms$balanceTol, 
@@ -178,19 +207,26 @@ derivsDefault = function(t, y, parms) {
                 dR.s[str.name, ] = 0
                 dX.growth[str.name] = 0
             }
-            
+
+             if (parms$networkAnalysis){
+                 uptake.row=c(uptake.row,as.vector(uptake.p))
+                 production.row=c(production.row,as.vector(production.p))
+             }
+
         }  #strain loop
+
         
         dR.g[gname, ] = colSums(dR.s)  #production-uptake from each group for path p
         
     }  #group loop
-    
-    
+
+
     for (rname in parms$resourceNames) {
         
         # add in changes to resource due to microbial growth
-        if (rname %in% parms$microbeNames) {
-            dR.m = dX.growth[rname]  #TODO need to sort out for strain names if more than 1 strain
+        
+        if (rname %in% parms$microbeNames) {#i.e. microbe is eaten
+            dR.m = dX.growth[rname]  #TODO need to sort out for strain names if more than 1 strain when microbes are a resource
         } else {
             dR.m = 0
         }
@@ -214,14 +250,18 @@ derivsDefault = function(t, y, parms) {
     
     # washout etc
     for (str.name in parms$allStrainNames) {
-        
+
+
+        #print(str.name)
+
         # add changes to X due to uptake of it as a resource
         if (str.name %in% parms$resourceNames) {
             dX.res = sum(dR.g[, str.name], na.rm = TRUE)
         } else {
             dX.res = 0
         }
-        
+
+
         XRate.in = parms$entryRateFunc(str.name, X[str.name], y, t, parms$Smats$inflowRate, 
             parms)
         
@@ -229,19 +269,26 @@ derivsDefault = function(t, y, parms) {
             stop(paste("MICROPOP ERROR: entry rate of", str.name, "is not defined at time", 
                 t))
         }
+
+
         XRate.out = parms$removalRateFunc(getGroupName(str.name, parms$microbeNames), 
             X[str.name], y, t, washOut, parms)
         if (is.na(XRate.out)) {
             stop(paste("MICROPOP ERROR: removal rate of", str.name, "is not defined at time", 
                 t))
         }
-        
+
         
         dX[str.name] = XRate.in + dX.res + dX.growth[str.name] - XRate.out
         
     }
+
     
-    list(c(dX, dR))
+    if (parms$networkAnalysis){
+        return(list(c(dX, dR),pH=pH,uptake.row,production.row))
+    }else{
+        return(list(c(dX, dR),pH=pH))
+    }
     
 }
 

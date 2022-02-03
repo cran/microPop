@@ -3,7 +3,7 @@
 #' If they do not then if reBalanceStoichiom=TRUE
 #' the stoichiometry will be adjusted
 #' @param stoichiom Array. stoichiom[gname,R,path]
-#' @param Rtype Resource type
+#' @param Rtype Resource type matrix[gname, res.name, path.name]
 #' @param microbeNames Vector of strings which contains the names of the
 #' microbial groups in the system e.g. c('Bacteroides','Acetogens')
 #' @param numPaths Named vector. Number of paths for each microbial group

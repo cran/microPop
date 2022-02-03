@@ -5,8 +5,15 @@
 \alias{extraGrowthLimFunc}
 \title{Extra Growth Limitation Function}
 \usage{
-extraGrowthLimFuncDefault(strainName, groupName, pathName, stateVarValues,
-  stateVarNames, time, parms)
+extraGrowthLimFuncDefault(
+  strainName,
+  groupName,
+  pathName,
+  stateVarValues,
+  stateVarNames,
+  time,
+  parms
+)
 }
 \arguments{
 \item{strainName}{Name of strain}

@@ -4,7 +4,9 @@
 \name{NoButyFibreDeg}
 \alias{NoButyFibreDeg}
 \title{NoButyFibreDeg dataframe}
-\format{dataframe}
+\format{
+dataframe
+}
 \usage{
 NoButyFibreDeg
 }

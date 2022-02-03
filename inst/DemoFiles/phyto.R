@@ -37,7 +37,8 @@ Kl=c(0.8,0.4,0.2); names(Kl)=c('Phyto1','Phyto2','Phyto3') #half sat for light
 myRateFuncs=rateFuncsDefault
 
 myRateFuncs$extraGrowthLimFunc=function(strainName,groupName,
-                                        pathName,stateVarValues,stateVarNames,time,parms){
+                                        pathName,stateVarValues,
+stateVarNames,time,parms){
     light.level=exp(-kL*z)
     v=light.level/(light.level+Kl[groupName])
     return(min(max(v,0),1))    

@@ -5,8 +5,19 @@
 \alias{combineGrowthLimFunc}
 \title{combines the growth limitation functions and max growth rates to get the growth rate of strain}
 \usage{
-combineGrowthLimFuncDefault(strainName, groupName, pathName, subst, ess,
-  boost, bio.sub, maxGrowthRate, growthLim, keyResName, nonBoostFrac)
+combineGrowthLimFuncDefault(
+  strainName,
+  groupName,
+  pathName,
+  subst,
+  ess,
+  boost,
+  bio.sub,
+  maxGrowthRate,
+  growthLim,
+  keyResName,
+  nonBoostFrac
+)
 }
 \arguments{
 \item{strainName}{Name of the strain that is being looped through in the ODE solver}

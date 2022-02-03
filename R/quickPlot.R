@@ -6,21 +6,33 @@
 #' @param yLabel String for y axis label
 #' @param xLabel String for x axis label
 #' @param sumOverStrains Logical
-#' @param saveFig Logical
-#' @param figType String
-#' @param figName String
+#' @param resourceLegendPosition String. Position of legend in resource plot, default is 'topleft'
+#' @param microbeLegendPosition String. Position of legend in microbe plot, default is 'topleft'
+#' @param saveFig Logical. Default is FALSE
+#' @param figType String. Default is "eps"
+#' @param figName String. Default is "microPopFig"
 #' @return Nothing just generates a plot
 #' @importFrom grDevices dev.copy2eps dev.copy2pdf dev.new rainbow tiff dev.print png
 #' @importFrom graphics legend lines par plot
 #' @export
-quickPlot= function(soln, numR, numStrains, microbeNames, yLabel, xLabel, sumOverStrains, 
-    saveFig = FALSE, figType = "eps", figName = "microPopFig") {
-    
+quickPlot = function(soln, numR, numStrains, microbeNames, yLabel, xLabel,
+                    sumOverStrains,
+                    resourceLegendPosition="topleft",
+                    microbeLegendPosition="topleft",
+                    saveFig = FALSE,
+                    figType = "eps", figName = "microPopFig") {
+
+
     wlen = 7
     hlen = 7  #width and height for png files
     
     numMFG = length(microbeNames)
-    numM = numStrains * numMFG
+    if (length(numStrains)==1){
+        numM = numStrains * numMFG
+    }else{
+        numM =sum(numStrains)
+    }
+    
     time = soln[, 1]
     
     if (numM == 1) {
@@ -30,15 +42,23 @@ quickPlot= function(soln, numR, numStrains, microbeNames, yLabel, xLabel, sumOve
     } else {
         X = soln[, 2:(numM + 1)]
     }
+
+    #print(X)
     
     R = soln[, (numM + 2):(numM + numR + 1), drop = FALSE]
     
-    if (numStrains > 1 & sumOverStrains) {
+    if (any(numStrains > 1) & sumOverStrains) {
+#        print(X)
         gmat = matrix(NA, nrow = length(time), ncol = numMFG)
         for (g in 1:numMFG) {
-            st = (g - 1) * numStrains + 1
-            fin = g * numStrains
-            gmat[, g] = rowSums(X[, st:fin])
+            gname=microbeNames[g]
+            ssum=rep(0,length(time))
+            for (strain in colnames(X)){
+                if (!is.na(pmatch(gname,strain))){
+                    ssum = ssum + X[,strain]
+                }
+            }
+            gmat[, g] = ssum
         }
         Xmax = max(gmat, na.rm = TRUE)
     } else {
@@ -57,16 +77,18 @@ quickPlot= function(soln, numR, numStrains, microbeNames, yLabel, xLabel, sumOve
         main = "Microbes", ylab = yLabel, cex.lab = 1.5, cex.axis = 1.3, cex.main = 1.5, 
         type = "n")
     for (g in 1:numMFG) {
-        if (numStrains > 1 & sumOverStrains) {
+        gname=microbeNames[g]
+        if (any(numStrains > 1) & sumOverStrains) {
             lines(time, gmat[, g], lwd = 2, col = cols[g])
         } else {
-            for (i in 1:numStrains) {
-                j = (g - 1) * numStrains + i
-                lines(time, X[, j], lwd = 2, col = cols[g])
+            for (strain in colnames(X)){
+                if (!is.na(pmatch(gname,strain))){
+                    lines(time,X[,strain],lwd=2,col=cols[g])
+                }
             }
         }
     }
-    legend("topleft", bg = "transparent", legend = microbeNames, col = cols, lty = 1, 
+    legend(microbeLegendPosition, bg = "transparent", legend = microbeNames, col = cols, lty = 1, 
         lwd = 2)
     if (saveFig) {
         if (figType == "pdf") {
@@ -101,7 +123,7 @@ quickPlot= function(soln, numR, numStrains, microbeNames, yLabel, xLabel, sumOve
     for (i in 1:numR) {
         lines(time, R[, i], lwd = 2, col = cols[i])
     }
-    legend("topleft", bg = "transparent", colnames(R), col = cols, lty = 1, lwd = 2)
+    legend(resourceLegendPosition, bg = "transparent", colnames(R), col = cols, lty = 1, lwd = 2)
     if (saveFig) {
         if (figType == "pdf") {
             dev.copy2pdf(file = paste(figName, "Resources.pdf", sep = ""))

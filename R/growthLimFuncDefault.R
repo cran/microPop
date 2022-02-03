@@ -13,12 +13,12 @@
 #' @param allSubType Vector of strings (with names corresponding to the resourceNames) which describes the type of each resource ('Rtype') - Rtypes are S (substitutable resource), Se (essential resource), Sb (booster resource), Sm (microbial resource), P (product) and Pb (biomass product)
 #' @param strainHalfSat Vector (with names corresponding to the resourceNames) of half-saturation constants for the given strain. If resource is not a substrate for the given strain, the value is NA 
 #' @param stateVarValues State vector (resources and microbes) (with names)
+#' @param parms list of parameter values
 #' @return scalar giving limitation on growth rate - must be >=0 and <=1
 #' @export
 #' 
-growthLimFuncDefault = function(strainName, groupName, pathName, varName, resourceValues, 
-    allSubType, strainHalfSat, stateVarValues) {
-    
+growthLimFuncDefault = function(strainName, groupName, pathName, varName, resourceValues, allSubType, strainHalfSat, stateVarValues,parms) {
+
     if (resourceValues[varName] <= 0) {
         v = 0
     } else {

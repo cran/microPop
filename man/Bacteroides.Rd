@@ -4,7 +4,9 @@
 \name{Bacteroides}
 \alias{Bacteroides}
 \title{Bacteroides dataframe}
-\format{dataframe}
+\format{
+dataframe
+}
 \usage{
 Bacteroides
 }

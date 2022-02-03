@@ -4,7 +4,9 @@
 \name{Xaa}
 \alias{Xaa}
 \title{Xaa dataframe}
-\format{dataframe}
+\format{
+dataframe
+}
 \usage{
 Xaa
 }

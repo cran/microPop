@@ -4,9 +4,20 @@
 \alias{quickPlot}
 \title{Generic plotting showing results of microPop}
 \usage{
-quickPlot(soln, numR, numStrains, microbeNames, yLabel, xLabel,
-  sumOverStrains, saveFig = FALSE, figType = "eps",
-  figName = "microPopFig")
+quickPlot(
+  soln,
+  numR,
+  numStrains,
+  microbeNames,
+  yLabel,
+  xLabel,
+  sumOverStrains,
+  resourceLegendPosition = "topleft",
+  microbeLegendPosition = "topleft",
+  saveFig = FALSE,
+  figType = "eps",
+  figName = "microPopFig"
+)
 }
 \arguments{
 \item{soln}{ODE output from microPopModel() i.e. matrix out$solution}
@@ -23,11 +34,15 @@ quickPlot(soln, numR, numStrains, microbeNames, yLabel, xLabel,
 
 \item{sumOverStrains}{Logical}
 
-\item{saveFig}{Logical}
+\item{resourceLegendPosition}{String. Position of legend in resource plot, default is 'topleft'}
 
-\item{figType}{String}
+\item{microbeLegendPosition}{String. Position of legend in microbe plot, default is 'topleft'}
 
-\item{figName}{String}
+\item{saveFig}{Logical. Default is FALSE}
+
+\item{figType}{String. Default is "eps"}
+
+\item{figName}{String. Default is "microPopFig"}
 }
 \value{
 Nothing just generates a plot

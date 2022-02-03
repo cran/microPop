@@ -4,7 +4,9 @@
 \name{Xh2}
 \alias{Xh2}
 \title{Xh2 dataframe}
-\format{dataframe}
+\format{
+dataframe
+}
 \usage{
 Xh2
 }

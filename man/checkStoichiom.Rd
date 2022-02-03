@@ -7,13 +7,19 @@ within a specified tolerance
 If they do not then if reBalanceStoichiom=TRUE
 the stoichiometry will be adjusted}
 \usage{
-checkStoichiom(stoichiom, Rtype, microbeNames, numPaths, stoiTol,
-  reBalanceStoichiom = FALSE)
+checkStoichiom(
+  stoichiom,
+  Rtype,
+  microbeNames,
+  numPaths,
+  stoiTol,
+  reBalanceStoichiom = FALSE
+)
 }
 \arguments{
 \item{stoichiom}{Array. stoichiom[gname,R,path]}
 
-\item{Rtype}{Resource type}
+\item{Rtype}{Resource type matrix[gname, res.name, path.name]}
 
 \item{microbeNames}{Vector of strings which contains the names of the
 microbial groups in the system e.g. c('Bacteroides','Acetogens')}

@@ -27,7 +27,7 @@ myRateFuncs$removalRateFunc=function(varName,varValue,stateVarValues,
     }else{
         if (varName%in%polymer.names){
             hydrolysis=khyd[varName]}#hydrolysis of polymers
-        if (getGroupName(varName,microbeNames)%in%microbeNames){death=kd}#death of microbes
+        if (getGroupName(varName,parms$microbeNames)%in%parms$microbeNames){death=kd}#death of microbes
         v=(washOut[varName] + hydrolysis + death)*varValue 
     }
     return(v)
@@ -37,8 +37,8 @@ myRateFuncs$entryRateFunc=function(varName,varValue,stateVarValues,
                                    time,inflowRate,parms){
 
     #entry rate from outside the system----------------------------------------------
-    gname=getGroupName(varName,microbeNames)
-    if (varName%in%parms$microbeNames){
+    gname=getGroupName(varName,parms$microbeNames)
+    if (gname%in%parms$microbeNames){
         v.in=inflowRate[gname]/parms$numStrains
     }else if (varName%in%polymer.names){
         v.in=inflowRate[varName]
@@ -59,7 +59,8 @@ myRateFuncs$entryRateFunc=function(varName,varValue,stateVarValues,
   
     #dead microbial cells become Znsc and Zpro
     if (varName=='Znsc' | varName=='Zpro'){
-        input.from.dead.cells=f.X[varName]*kd*sum(stateVarValues[parms$microbeNames])} #g/L/h
+        #input.from.dead.cells=f.X[varName]*kd*sum(stateVarValues[parms$microbeNames])} #g/L/h
+        input.from.dead.cells=f.X[varName]*kd*sum(stateVarValues[parms$allStrainNames])} #g/L/h
 
     v=v.in+hydrolysis+input.from.dead.cells
     return(v)

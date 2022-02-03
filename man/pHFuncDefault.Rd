@@ -5,12 +5,14 @@
 \alias{pHFunc}
 \title{pH Function}
 \usage{
-pHFuncDefault(time, parms)
+pHFuncDefault(time, parms, stateVarValues = NULL)
 }
 \arguments{
 \item{time}{(scalar). The current time point in the ODE solver.}
 
 \item{parms}{List which contains all information required by the ODE solver}
+
+\item{stateVarValues}{State vector (resources and microbes) (with names)}
 }
 \value{
 (scalar) pH at the given time

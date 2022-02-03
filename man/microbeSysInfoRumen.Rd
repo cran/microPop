@@ -4,7 +4,9 @@
 \name{microbeSysInfoRumen}
 \alias{microbeSysInfoRumen}
 \title{microbeSysInfoRumen dataframe}
-\format{dataframe}
+\format{
+dataframe
+}
 \usage{
 microbeSysInfoRumen
 }

@@ -4,7 +4,9 @@
 \name{Xsu}
 \alias{Xsu}
 \title{Xsu dataframe}
-\format{dataframe}
+\format{
+dataframe
+}
 \usage{
 Xsu
 }

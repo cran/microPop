@@ -1,5 +1,4 @@
 #human colon 3
-#Note not all NSP is useable therefore must adjust input values so just put in useable amount
 #Look at 3 MFGs: 'Bacteroides','NoButyStarchDeg','Acetogens'
 #Simulate growth in two compartments where the contents of the first flow into the second
 #Dependence of microbial growth on pH is included

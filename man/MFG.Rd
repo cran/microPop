@@ -4,7 +4,9 @@
 \name{MFG}
 \alias{MFG}
 \title{Microbial Functional Group (MFG) dataframes}
-\format{A dataframe with the row names in the itemised list below and a column for units (optional) and for each resource required by the microbial group.}
+\format{
+A dataframe with the row names in the itemised list below and a column for units (optional) and for each resource required by the microbial group.
+}
 \usage{
 MFG
 }
@@ -31,6 +33,7 @@ Also, the order of the resources columns does not matter (although if there is a
 The resources may be different for each MFG (e.g. See Bacteroides and Xsu).
 
 When the user tells microPop which groups to use via the microbeNames input argument, the package will determine the names of all the resources and MFGs in the system and then check they are also in the system information files.
+
 
 Note that the optional units column can not contain NAs. For entries without units put 'none'.
 }

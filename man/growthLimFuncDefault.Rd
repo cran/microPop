@@ -5,8 +5,17 @@
 \alias{growthLimFunc}
 \title{growth rate limitation function}
 \usage{
-growthLimFuncDefault(strainName, groupName, pathName, varName,
-  resourceValues, allSubType, strainHalfSat, stateVarValues)
+growthLimFuncDefault(
+  strainName,
+  groupName,
+  pathName,
+  varName,
+  resourceValues,
+  allSubType,
+  strainHalfSat,
+  stateVarValues,
+  parms
+)
 }
 \arguments{
 \item{strainName}{Name of the strain that is being looped through in the ODE solver}
@@ -24,6 +33,8 @@ growthLimFuncDefault(strainName, groupName, pathName, varName,
 \item{strainHalfSat}{Vector (with names corresponding to the resourceNames) of half-saturation constants for the given strain. If resource is not a substrate for the given strain, the value is NA}
 
 \item{stateVarValues}{State vector (resources and microbes) (with names)}
+
+\item{parms}{list of parameter values}
 }
 \value{
 scalar giving limitation on growth rate - must be >=0 and <=1

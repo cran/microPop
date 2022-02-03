@@ -4,7 +4,9 @@
 \name{resourceSysInfo}
 \alias{resourceSysInfo}
 \title{resourceSysInfo}
-\format{A dataframe with the row names in the itemised list below and a column for units (optional) and for each resource in the system to be simulated.}
+\format{
+A dataframe with the row names in the itemised list below and a column for units (optional) and for each resource in the system to be simulated.
+}
 \usage{
 resourceSysInfo
 }

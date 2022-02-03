@@ -14,7 +14,9 @@ getPHcorners = function(microbeNames, pHLimit) {
     
     L = length(microbeNames)
     pHcorners = matrix(NA, ncol = 4, nrow = L, dimnames = list(microbeNames))
+
     if (pHLimit) {
+
         for (gname in microbeNames) {
             data = get(gname)
             if (any(rownames(data) == "pHcorners")) {
@@ -37,6 +39,7 @@ getPHcorners = function(microbeNames, pHLimit) {
             }
         }
     }
-    
+
+    #print(pHcorners)
     return(pHcorners)
 }

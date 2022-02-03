@@ -2,14 +2,29 @@
 % Please edit documentation in R/microPopModel.R
 \name{microPopModel}
 \alias{microPopModel}
-\title{microPopModel}
+\title{Runs the microbial population model}
 \usage{
-microPopModel(microbeNames, times, resourceSysInfo, microbeSysInfo,
-  rateFuncs = rateFuncsDefault, odeFunc = derivsDefault,
-  numStrains = 1, oneStrainRandomParams = FALSE, pHLimit = FALSE,
-  pHVal = NA, plotOptions = list(), odeOptions = list(),
-  strainOptions = list(), checkingOptions = list(),
-  microbeMolarMass = 113, bacCutOff = 1e-14)
+microPopModel(
+  microbeNames,
+  times,
+  resourceSysInfo,
+  microbeSysInfo,
+  rateFuncs = rateFuncsDefault,
+  odeFunc = derivsDefault,
+  numStrains = 1,
+  oneStrainRandomParams = FALSE,
+  pHLimit = FALSE,
+  pHVal = NA,
+  plotOptions = list(),
+  odeOptions = list(),
+  strainOptions = list(),
+  checkingOptions = list(),
+  microbeMolarMass = 113,
+  bacCutOff = 1e-14,
+  networkAnalysis = FALSE,
+  myPars = NULL,
+  ...
+)
 }
 \arguments{
 \item{microbeNames}{Vector of strings which contains the names of the microbial groups in the system e.g. c('Bacteroides','Acetogens'). A dataframe for each of the same name must also exist in the workspace.}
@@ -24,7 +39,7 @@ microPopModel(microbeNames, times, resourceSysInfo, microbeSysInfo,
 
 \item{odeFunc}{The function the ODE solver will use - the default is derivsDefault provided by the package but if the user wants to make significant changes a new ODE function file can be used. See ?derivsDefault}
 
-\item{numStrains}{Integer stating the number of strains in each microbial group (same for all groups). Default is 1.}
+\item{numStrains}{Integer (or named vector of integers) stating the number of strains in each microbial group. If this is a single number it is the same for all groups. If it is a vector it must be named using microbeNames. Default is 1.}
 
 \item{oneStrainRandomParams}{Logical to allow randomization of parameters even if there is only one strain. The default is FALSE which means that if numStrains=1 then the group params are used; if numStrains>1 then the parameters are automatically randomised according to info given in strainOptions. If oneStrainRandomParams=TRUE then even if there is only one strain its parameters will be randomised according to info given in strainOptions.}
 
@@ -32,18 +47,18 @@ microPopModel(microbeNames, times, resourceSysInfo, microbeSysInfo,
 
 \item{pHVal}{Scalar. If the pH value is fixed it can be specified here and this is then used in the default rateFuncs$pHFunc function.}
 
-\item{plotOptions}{List containing instructions for plotting: Default is list(plotFig=TRUE, sumOverStrains=FALSE, saveFig=FALSE, figType='eps', figName='microPopFig', yLabel='Concentration (g/L)', xLabel='Time').\cr
+\item{plotOptions}{List containing instructions for plotting: Default is list(plotFig=TRUE, sumOverStrains=FALSE, resourceLegendPosition="topleft", microbeLegendPosition="topleft", saveFig=FALSE, figType='eps', figName='microPopFig', yLabel='Concentration (g/L)', xLabel='Time').\cr
 To turn off plot generation set plotFig=FALSE. If there are multiple strains these are all plotted if sumOverStrains=FALSE, otherwise they will be summed over each group. To save plot, saveFig=TRUE, figType (format) can be 'eps','png', 'pdf' or 'tiff' and is specified in figType (string), the name is figName (string) to which the string 'Microbes' or 'Resources' will be added for the respective plots.}
 
 \item{odeOptions}{List containing instructions for the ODE solver ('deSolve'). Default: list('atol'=1e-6,'rtol'=1e-6,'method'='lsoda'). See ?ode for more details.}
 
-\item{strainOptions}{List containing instructions for specifying strain parameters. Default: list(randomParams=c('halfSat', 'yield', 'maxGrowthRate', 'pHtrait'), seed=1, distribution='uniform', percentTraitRange=0, maxPHshift=0., applyTradeOffs=FALSE, tradeOffParams=NULL, paramsSpecified=FALSE, paramDataName=NULL). 
+\item{strainOptions}{List containing instructions for specifying strain parameters. Default: list(randomParams=c('halfSat', 'yield', 'maxGrowthRate', 'pHtrait'), seed=1, distribution='uniform', percentTraitRange=0, maxPHshift=0, applyTradeOffs=FALSE, tradeOffParams=NULL, paramsSpecified=FALSE, paramDataName=NULL). 
 \itemize{
 \item randomParams (vector) specifying which parameters need to be stochastically generated.
 \item seed (number) seed for random number generator.
 \item distribution (string) - either 'uniform' or 'normal' specifying the shape of the distribution from which to draw the random strain parameters. 
-\item percentTraitRange (number) this is the percentage either side of the group parameter value which the strain parameter may range e.g. if percentTraitRange=10 then range is 0.9x to 1.1x for group mean x. 
-\item maxPHshift (number) pH units to range over.
+\item percentTraitRange (single number or named vector of numbers) this is the percentage either side of the group parameter value which the strain parameter may range e.g. if percentTraitRange=10 then range is 0.9x to 1.1x for group mean x. This can be specified for each microbial data file in microbeNames using a named vector, however, if only one number is given it is assumed to apply to all microbes.
+\item maxPHshift (number) pH units to range over (either one value which is applied to all microbe groups or a named vector with a value for each group and microbeNames for its names).
 \item applyTradeOffs (logical) to trade off `good' and `bad' parameter values. 
 \item tradeOffParams (vector of two strings) - parameters to trade off against each other. Note that pHtrait can not be traded off as whether this trait is good or bad depends on the environmental pH.
 \item paramsSpecified (logical) TRUE if strain parameters are read in from a file (whose name is specified in paramDataName). The file must have colnames c(strainName, paramName, paramVal, paramUnit, resource,path) and where strainName is in format 'groupName.i' where i is the strain number.
@@ -59,12 +74,18 @@ To turn off plot generation set plotFig=FALSE. If there are multiple strains the
 \item{microbeMolarMass}{Scalar. Mass of 1 mole of microbes - default is 113g/mol (Batstone et al., 2002)}
 
 \item{bacCutOff}{Scalar. Amount of bacteria below which the bacteria are considered to have left the system and can't grow, default =1e-14. If this is set to zero then bacteria will always be able to grow again as zero is never reached.}
+
+\item{networkAnalysis}{Logical. If you want to use the network analysis functions on your model results set as TRUE (default is FALSE)}
+
+\item{myPars}{List containing extra parameter values - used if gutModel is TRUE i.e. with microPopGut package}
+
+\item{...}{Add your own input arguments}
 }
 \value{
 The output is a list containing a matrix called 'solution' where rows are points in time and the columns are the state variables, and another list called parms which contains all the information needed to run the model. Within parms there are a number of other lists (e.g. Pmats for parameter values and Smats for system settings etc - try names(out$parms)).
 }
 \description{
-Runs the microbial population model
+creates a system of ordinary differential equations and solves them
 }
 \examples{
 #simplest example - define one microbial group (Archea) with 4 resources and

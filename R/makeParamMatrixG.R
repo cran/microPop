@@ -31,7 +31,7 @@ makeParamMatrixG = function(microbeNames, parameterName, numPaths, resData, micr
     for (gname in microbeNames) {
         data = get(gname)
         cn = colnames(data)
-        nres = cn[cn != "units" & cn != "Units"]
+        nres = cn[cn != "units" & cn != "Units" & cn !='REF']
         allResources = append(allResources, nres[substring(nres, 1, 2) != "X."], 
             after = ct)
         if (any(data["Rtype", ] == "Pb", na.rm = TRUE)) {

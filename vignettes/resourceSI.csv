@@ -1,0 +1,5 @@
+,Units,S1,P1
+startValue,g/l,10,0
+inflowRate,g/l/d,1,0
+washOut,/d,1,1
+molarMass,g/mol,100,50

@@ -1,0 +1,168 @@
+---
+title: "Networks"
+author: "Helen Kettle"
+date: ""
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Networks}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+**This vignette is only for plotting networks in microPop, please see the basic microPop vignette if you are new to microPop. Use `browseVignettes('microPop')` to see all the vignettes available.**
+
+## Intro
+Previously the output from microPop consisted of the concentrations of the microbes and resources over the time course of a simulation. See:
+**Kettle H, G Holtrop, P Louis, HJ Flint. 2018. microPop: Modelling microbial populations and communities in R. Methods in Ecology and Evolution, 9(2), p399-409. doi: 10.1111/2041-210X.12873**
+https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12873
+
+Now microPop has been updated to also output the production and uptake of mass by the different microbes. This means that we can see how mass is flowing through the microbial network. 
+Often a metabolite may appear unimportant because its concentration is almost zero (e.g. lactate in the human colon) but this may be misleading if it is actually being produced in large quantities and taken up in equally large quantities and is therefore crucial to the functioning of the system.
+
+To visualise the microbial networks and the flows on them we use the R package **visNetwork**.
+
+There are two different types of network plot now available in microPop. The first one is simply plotting up the structure of the network before the simulation has been run using the microbial input data frames. This is done with the functions `networkDFfromMPinput` and `getVNPlotObject`. The second option is plotting the network after the simulation has been run with the functions `networkDFfromMPoutput` and (again) `getVNPlotObject`. In the case of the former there are no flows calulated so the graphic simply shows the structure of the network (note you can plot any microbial data frame to check it looks right). In the latter case there is the option to plot flow through the links (shown by thickness of link) and concentrations (shown by size of the nodes).
+
+The following text gives more information on how to use the network functions in microPop.
+
+## Plotting networks from microPop's microbial input data frames
+
+First we load the libraries:
+```{r results='hide'}
+library(microPop)
+library(visNetwork)
+```
+
+If you have made a csv file of your microbe, e.g. microbe1.csv, then you can load it into micropop using `createDF('microbe1.csv')` and then look at the image for it using the functions `networkDFfromMPinput` and `getVNPlotObject`.
+
+Here we give an example using one of the intrinsic data frames, Bacteroides.
+
+
+```{r}
+v1=networkDFfromMPinput('Bacteroides') #this produces the network nodes and edges dataframes (contained in the list v1)
+v2=getVNPlotObject(v1$nodes,v1$edges) #this takes the nodes and edges and makes the visNetwork object for plotting
+visOptions(v2) #this produces a plot of the network. You can also use print(v2)
+```
+Note that can you click on this plot and move different nodes around. You can then export it as a png file if required.
+
+To see all the intrinsic data sets in microPop use:       
+
+```{r}
+data(package='microPop')
+```
+
+
+Multiple microbial data frames can also be plotted:
+```{r}
+microbes=c('Acetogens','ButyrateProducers1','Bacteroides','Methanogens')
+DFs=networkDFfromMPinput(microbes)
+nodes=DFs$nodes
+edges=DFs$edges
+vv=getVNPlotObject(nodes,edges,
+                    addLegend=TRUE,
+                    figWidth=600,
+                    figHeight=600)
+
+visOptions(vv)
+```
+
+You can click on nodes to highlight their local networks and also drag nodes around to make the plot clearer.
+Note that the nodes and edges are not weighted as we have not calculated the size of the flows/concentrations - to do this we would need to run a microPopModel simulation.
+To save the plot click on the "export as png" button.
+
+Colours can easily be changed, e.g.,
+```{r}
+vv=getVNPlotObject(nodes,edges,
+                   addLegend=TRUE,
+                   microbeCol='pink',
+                   resourceCol='cyan',
+                   productionCol='red',
+                   uptakeCol='purple',
+                   figWidth=600,
+                   figHeight=600)
+
+visOptions(vv)
+```
+
+We can also plot up all 10 microbial groups
+
+```{r}
+allMicrobes=c('Acetogens','ButyrateProducers1','ButyrateProducers2','ButyrateProducers3',
+                           'Bacteroides','Methanogens','LactateProducers',
+              'NoButyFibreDeg','NoButyStarchDeg','PropionateProducers')
+
+DFs=networkDFfromMPinput(allMicrobes)
+nodes=DFs$nodes
+edges=DFs$edges
+
+#get the visNetwork plot object:
+vv=getVNPlotObject(nodes,edges,
+                   addLegend=FALSE,
+                   mainTitle='10 groups',
+                   figWidth=800,
+                   figHeight=800)
+
+visOptions(vv)
+```
+
+
+
+## Plotting the flow network at given time in a microPop simulation
+After running a simulation with microPop you can look at flows on the network at any time point in the simulation. In this case the graph will have weighted edges representing the uptake of substrates and the production of metabolites, and weighted nodes representing the concentration of the microbes and resources. 
+The flows generated by microPop have units of mass (or concentration) per unit time but these can be converted to moles (or moles/volume) per unit time if required. 
+Similarly for the nodes - the substrates and metabolite concentrations/masses can be converted to moles and these are scaled relative to each other. The microbes are left as mass/concentration and are scaled relative to each other but not to the resources. 
+
+We now run a short simulation of microPop with 2 groups (Bacteroides and Acetogens) and use the instrinsic system info files contained in microPop to define the system.
+
+```{r, results='hide'}
+
+  microbes=c('Acetogens','Bacteroides','ButyrateProducers1')
+
+  out=microPopModel(microbeNames=microbes,
+                      times=seq(0,2,0.01),
+                      resourceSysInfo=resourceSysInfoHuman,
+                      microbeSysInfo=microbeSysInfoHuman,
+                      plotOptions = list(plotFig=FALSE),
+                      networkAnalysis=TRUE)
+```
+Note we have to put in the input argument `networkAnalysis = TRUE` in order for the flows to be recorded by microPop.
+
+We now call `networkDFfromMPoutput()` in order to generate the network data frames at a chosen time (in this case after 1 day). 
+
+```{r}
+DFs=networkDFfromMPoutput(chosen.time=1,MPoutput=out)
+```
+We can now plot the network using `getVNPlotObject()` as before
+
+```{r}
+vv=getVNPlotObject(DFs$nodes,DFs$edges,scaleNodes=TRUE,scaleEdges = TRUE,
+                   mainTitle='Network after 1 d', 
+                   figWidth = 500,figHeight = 500)
+visOptions(vv)
+```
+
+If there is more than one strain within a group we can plot the network with just the groups (default) or we can plot each strain by setting `sumOverStrains=FALSE` in `networkDFfromMPoutput()`. For example if we have 1 strain in Acetogens, 2 in Bacteroides and 3 in ButyRateProducers1 we get the following:
+
+```{r, results='hide'}
+
+  microbes=c('Acetogens','Bacteroides','ButyrateProducers1')
+
+  out=microPopModel(microbeNames=microbes,
+                      times=seq(0,2,0.01),
+                      numStrains=c(Acetogens=1,Bacteroides=2,ButyrateProducers1=3),
+                      strainOptions=list(randomParams=c('maxGrowthRate','halfSat'),percentTraitRange=20),
+                      resourceSysInfo=resourceSysInfoHuman,
+                      microbeSysInfo=microbeSysInfoHuman,
+                      plotOptions = list(plotFig=FALSE),
+                      networkAnalysis=TRUE)
+```
+```{r}
+DFs=networkDFfromMPoutput(chosen.time=1,MPoutput=out,sumOverStrains = FALSE)
+
+vv=getVNPlotObject(DFs$nodes,DFs$edges,scaleNodes=TRUE,scaleEdges = TRUE,
+                   figWidth = 700,figHeight = 700)
+visOptions(vv)
+```
+Similarly we can decide whether to sum over metabolic paths or not using `sumOverPaths` in `networkDFfromMPoutput()`.

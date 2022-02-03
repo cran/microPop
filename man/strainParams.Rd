@@ -4,7 +4,9 @@
 \name{strainParams}
 \alias{strainParams}
 \title{strainParams dataframe}
-\format{dataframe}
+\format{
+dataframe
+}
 \usage{
 strainParams
 }

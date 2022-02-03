@@ -7,8 +7,14 @@ to an array of the same name
 array has form [group,resource,path]
 reads in data from MFG dataframes}
 \usage{
-makeParamMatrixG(microbeNames, parameterName, numPaths, resData,
-  microbeMolarMass, resNames)
+makeParamMatrixG(
+  microbeNames,
+  parameterName,
+  numPaths,
+  resData,
+  microbeMolarMass,
+  resNames
+)
 }
 \arguments{
 \item{microbeNames}{Vector of strings which contains the names of the microbial groups in the system e.g. c('Bacteroides','Acetogens')}

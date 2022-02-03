@@ -5,8 +5,14 @@
 \title{Internal function to trade off one trait against another (used when
 assigning randomly generated strain traits)}
 \usage{
-applyTraitTradeOffs(microbeNames, tradeOffParams, numPaths, numStrains,
-  Pmats, resourceNames)
+applyTraitTradeOffs(
+  microbeNames,
+  tradeOffParams,
+  numPaths,
+  numStrains,
+  Pmats,
+  resourceNames
+)
 }
 \arguments{
 \item{microbeNames}{Vector of strings which contains the names of
@@ -18,7 +24,7 @@ off against each other}
 \item{numPaths}{Named vector. Number of paths for each microbial
 group}
 
-\item{numStrains}{Scalar. Number of strains per group}
+\item{numStrains}{Integer or vector of integers. Number of strains per group}
 
 \item{Pmats}{List containing lists and matrices:
 [[param]][[strainName]][path,rname]}

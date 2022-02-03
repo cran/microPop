@@ -5,9 +5,22 @@
 \alias{productionFunc}
 \title{Production Function}
 \usage{
-productionFuncDefault(strainName, groupName, pathName, varName,
-  all.substrates, keyResName, stoichiom, products, bio.products, uptake,
-  growthRate, yield, parms, water)
+productionFuncDefault(
+  strainName,
+  groupName,
+  pathName,
+  varName,
+  all.substrates,
+  keyResName,
+  stoichiom,
+  products,
+  bio.products,
+  uptake,
+  growthRate,
+  yield,
+  parms,
+  water
+)
 }
 \arguments{
 \item{strainName}{Name of the strain that is being looped through in the ODE solver}

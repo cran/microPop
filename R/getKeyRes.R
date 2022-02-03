@@ -29,7 +29,7 @@ getKeyRes = function(microbeNames, numPaths) {
             } else {
                 vec[p] = data[kvar, ][[1]]
             }
-            
+
             if (any(data[Rvar, ] == "Se") | any(data[Rvar, ] == "Sb") | any(data[Rvar, 
                 ] == "Sm")) {
                 # if (!vec[p]%in%colnames(data)){stop(paste('MICROPOP ERROR: The key resource

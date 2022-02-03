@@ -4,7 +4,9 @@
 \name{NoButyStarchDeg}
 \alias{NoButyStarchDeg}
 \title{NoButyStarchDeg dataframe}
-\format{dataframe}
+\format{
+dataframe
+}
 \usage{
 NoButyStarchDeg
 }

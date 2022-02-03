@@ -1,0 +1,9 @@
+,units,S1,S2,P1,P2
+Rtype,none,S,S,P,P
+halfSat,g/l,0.001,0.001,NA,NA
+yield,g/g,0.3,0.3,NA,NA
+maxGrowthRate,/d,5,10,NA,NA
+stoichiom,mol,2,2,3,2
+keyResource,none,,,,
+pHcorners,pH,4,5,7,8
+numPathways,none,1,,,

@@ -4,7 +4,9 @@
 \name{resourceSysInfoRumen}
 \alias{resourceSysInfoRumen}
 \title{resourceSysInfoRumen dataframe}
-\format{dataframe}
+\format{
+dataframe
+}
 \usage{
 resourceSysInfoRumen
 }

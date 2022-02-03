@@ -16,7 +16,8 @@ getValues = function(sysInfoMicrobes, sysInfoRes, stateVarNames, quantity,
     L = length(stateVarNames)
     x = 0 * seq(1, L)
     names(x) = stateVarNames
-    
+
+
     for (i in 1:L) {
         
         if (stateVarNames[i] %in% microbeNames) {
@@ -30,7 +31,7 @@ getValues = function(sysInfoMicrobes, sysInfoRes, stateVarNames, quantity,
         }
         
         if (is.na(data[quantity, stateVarNames[i]]) & quantity != "inflowRate") {
-            stop(paste("MICROPOP ERROR: Missing data for", quantity, "in systemInfoMicrobes file"))
+            stop(paste("MICROPOP ERROR: Missing data for", quantity, "in system Info file"))
         } else {
             x[i] = as.numeric(data[quantity, stateVarNames[i]])
         }
@@ -39,10 +40,17 @@ getValues = function(sysInfoMicrobes, sysInfoRes, stateVarNames, quantity,
     
     if (quantity == "startValue") {
         # need to make start values for each strain (not just group)
-        strainICs = seq(1, length(microbeNames) * numStrains)
-        for (i in 1:length(microbeNames)) {
-            strainICs[((i - 1) * numStrains + 1):(numStrains * i)] = x[i]/numStrains
+        strainICs=NULL
+        for (g in microbeNames){
+            if (length(numStrains)==1){Ls=numStrains}else{Ls=numStrains[g]}
+            
+            strainICs=c(strainICs,rep(x[g]/Ls,Ls))
         }
+
+#        strainICs = seq(1, length(microbeNames) * numStrains)
+#        for (i in 1:length(microbeNames)) {
+#            strainICs[((i - 1) * numStrains + 1):(numStrains * i)] = x[i]/numStrains
+#        }
         resx = x[-seq(1, length(microbeNames))]
         x = c(strainICs, resx)
         names(x) = c(strainNames, resourceNames)

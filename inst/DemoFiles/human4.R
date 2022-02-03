@@ -1,5 +1,4 @@
 #human colon 4
-#Note not all NSP is useable therefore must adjust input values so just put in useable amount
 #Look at 3 MFGs: 'Bacteroides','NoButyStarchDeg','Acetogens'
 #Add in multiple strains
 #pH change halfway through simulation as in human2.R

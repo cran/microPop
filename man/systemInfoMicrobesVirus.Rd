@@ -4,7 +4,9 @@
 \name{systemInfoMicrobesVirus}
 \alias{systemInfoMicrobesVirus}
 \title{systemInfoMicrobesVirus dataframe}
-\format{dataframe}
+\format{
+dataframe
+}
 \usage{
 systemInfoMicrobesVirus
 }

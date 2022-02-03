@@ -5,8 +5,16 @@
 \title{get system quantity (e.g. startValue, inflowRate, washOut) for all state variables
 (convention is that microbes are before resources)}
 \usage{
-getValues(sysInfoMicrobes, sysInfoRes, stateVarNames, quantity,
-  strainNames, microbeNames, resourceNames, numStrains)
+getValues(
+  sysInfoMicrobes,
+  sysInfoRes,
+  stateVarNames,
+  quantity,
+  strainNames,
+  microbeNames,
+  resourceNames,
+  numStrains
+)
 }
 \arguments{
 \item{sysInfoMicrobes}{sys info dataframe for microbes}

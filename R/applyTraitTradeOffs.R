@@ -12,7 +12,7 @@
 #'     off against each other
 #' @param numPaths Named vector. Number of paths for each microbial
 #'     group
-#' @param numStrains Scalar. Number of strains per group
+#' @param numStrains Integer or vector of integers. Number of strains per group
 #' @param Pmats List containing lists and matrices:
 #'     [[param]][[strainName]][path,rname]
 #' @param resourceNames Vector of strings which contains the names of
@@ -47,19 +47,20 @@ applyTraitTradeOffs = function(microbeNames, tradeOffParams, numPaths, numStrain
     nPmats = Pmats
     
     for (gname in microbeNames) {
+        if (length(numStrains)==1){Ls=numStrains}else{Ls=numStrains[gname]}
         for (path in 1:numPaths[gname]) {
             for (rname in resourceNames) {
-                mat = matrix(NA, ncol = numStrains, nrow = 2)
-                for (i in 1:numStrains) {
+                mat = matrix(NA, ncol = Ls, nrow = 2)
+                for (i in 1:Ls) {
                   strainName = paste(gname, ".", i, sep = "")
                   mat[1, i] = Pmats[[par1]][[strainName]][path, rname]
                   mat[2, i] = Pmats[[par2]][[strainName]][path, rname]
                 }
-                if (sum(is.finite(mat[1, ])) == numStrains & sum(is.finite(mat[2, 
-                  ])) == numStrains) {
+                if (sum(is.finite(mat[1, ])) == Ls &
+                    sum(is.finite(mat[2, ])) == Ls) {
                   nmat = rbind(sort(mat[1, ], decreasing = decreasing.logical[1]), 
                     sort(mat[2, ], decreasing = decreasing.logical[2]))
-                  for (i in 1:numStrains) {
+                  for (i in 1:Ls) {
                     strainName = paste(gname, ".", i, sep = "")
                     nPmats[[par1]][[strainName]][path, rname] = nmat[1, i]
                     nPmats[[par2]][[strainName]][path, rname] = nmat[2, i]

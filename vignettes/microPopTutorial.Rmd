@@ -1,0 +1,773 @@
+---
+title: "microPop Tutorial"
+author: "Helen Kettle"
+date: ""
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{microPop Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(microPop)
+```
+
+
+# Overview
+
+MicroPop is an R package which simulates/predicts the growth of interacting populations of microbiota.
+
+It is described in the paper: 
+
+**Kettle H, G Holtrop, P Louis, HJ Flint. 2018. microPop: Modelling microbial populations and communities in R. Methods in Ecology and Evolution, 9(2), p399-409. doi: 10.1111/2041-210X.12873**
+https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12873
+
+The user specifies the system via a number of input files (csv files that become dataframes) and the function `microPopModel()` will construct and solve the necessary equations (ordinary differential equations) and provide an output containing the solution (e.g. the concentrations of microbes, substrates and metabolites at the required time points) as well as all the settings/parameters involved in the simulation, and plots of the microbes and resources over time.
+
+## This Tutorial
+A zip file with all the files used in this tutorial is given here:
+
+https://www.bioss.ac.uk/people/helen/microPop/microPopTutorial.zip
+ 
+Or see the webpage:
+https://www.bioss.ac.uk/people/helen/microPop/microPop.html
+ 
+# Getting started
+```{r,echo=FALSE}
+#install.packages('~/MicroPop/MicroPop1/microPop_1.6.tar.gz',repos=NULL,source=TRUE)
+library(knitr)
+```
+Add the library to your current session
+```{r}
+library(microPop)
+```
+```{r}
+#check package version 
+packageVersion("microPop")
+```
+Make sure you are using version 1.6 or above.
+
+
+# Defining your system
+We will start with a very simple example. 
+
+We begin by making a csv file for our microbe ('MFG1.csv'; file provided in the InputFiles folder) and then loading it into R using the microPop function 'createDF()'. Note, it is better to use createDF() than the base R functions as no need to specify stringsAsFactors=FALSE etc.
+
+
+```{r}
+M1=createDF(file='MFG1.csv')
+```
+
+M1 looks like this:
+```{r,echo=FALSE}
+kable(M1)
+```
+
+Where 
+
+* Rtype is the type of resource (S=substrate, P=product). Since products are often also substrates (e.g. in cross feeding) we use 'resources' to refer to both.
+
+* keyResource is only important for specific cases (more later)
+
+* pHcorners is only important if you want pH to limit growth (more later)
+
+* numPathways is only important if the microbe has more than one metabolic pathway
+
+* halfSat and maxGrowthRate are shown in plot below. The halfSat is the half saturation constant i.e. the amount of substrate needed to give half the maximum growth (assuming Monod Equation growth). 
+
+* The yield is g M1/g S1 i.e. the grams of substrate needed per gram of microbial growth.
+
+* The units column is not used by microPop but is there for your reference.
+
+```{r, echo=FALSE, fig.height=4,fig.width=4}
+s=seq(0,0.05,0.0001)
+Gmax=5
+K=0.001
+G=Gmax*s/(s+K)
+  plot(range(s),c(0,5),type='n',xlab='substrate (g/l)',ylab='Specific growth rate (/d)')
+  lines(s,G)
+  abline(v=K,lty=2,col=2)
+  abline(h=Gmax,col=3,lty=2)
+  legend('right',col=c(2,3),lty=2,legend=c('halfSat','maxGrowthRate'),bty='n')
+```
+
+
+Now we have specified the microbe we need to tell microPop about the environment it is in. We do this using 'system information (SI) files'. We can make these files in excel (or any editor) and save them as csv and read into R using createDF() again:
+
+```{r}
+res.SI=createDF(file='resourceSI.csv')
+```
+
+
+res.SI looks like this:
+```{r,echo=FALSE}
+kable(res.SI)
+```
+
+Note, we have specified the starting value of each resource, the amount that is flowing into the system and the specific wash out rate (e.g. if the system has a turnover time of 2 days then this is 0.5 /d and each resource, R,  (g/l) leaves at the rate 0.5*R g/l/d ). 
+For convenience we also specify the molar mass of each resource here.
+
+We now read in the microbial SI file:
+```{r}
+mic.SI=createDF(file="microbeSI.csv")
+```
+
+
+mic.SI looks like:
+```{r, echo=FALSE}
+kable(mic.SI)
+```
+
+Note, once these input files are defined as objects in our workspace we can edit them any way we like in R.
+
+We now use the input arguments in the microPopModel() function to define the remaining information about the system i.e. which microbes are there (_microbeNames_) and how long we want to simulate (_times_) and we tell it which SI data frames to use.
+Note, here _times_ is a sequence from 0 to 1 going up in 0.001 intervals. There are no units specified but since our input files all have time units of d then this is what microPop assumes are the units for _times_. You can use any time units you like but you must be consistent throughout all your input information. Similarly only use one mass unit. MicroPop is based on mass balance equations therefore you can not use moles only mass or concentrations for quantities. 
+
+```{r, results='hide'}
+out=microPopModel(microbeNames = 'M1',
+              times=seq(0,1,0.001),
+              resourceSysInfo=res.SI,
+              microbeSysInfo=mic.SI,
+              plotOptions=list(plotFig=FALSE)
+)
+```
+```{r, fig.height=4,fig.width=8}
+par(mfrow=c(1,2))
+plotMicrobes(out,cex.title=0.7,cex.legend=0.5,cex.ax=0.7)
+plotResources(out,cex.title=0.7,cex.legend=0.5,cex.ax=0.7)
+```
+
+When microPop runs it will automatically produce two plots - one for the resources (i.e. substrates and products) and another for the microbes. This does not work well with R markdown (used to contruct this vignette) so we turn this off using `plotOptions(plotFig=FALSE)` and then call the two plotting functions ( _plotMicrobes_ and _plotResources_) separately afterwards (note, we will not always show this plotting code in the vignette from now on).
+
+
+Let's look at the output ('out'):
+
+```{r}
+names(out)
+```
+
+It is a list with 2 elements. The first item, 'solution', is a matrix of the state variables (M1, S1 and P1) at the times specified in 'times'. Let's look at the first few lines:
+```{r}
+head(out$solution)
+```
+
+If you are familiar with R you can make your own plots from the matrix out$solution, e.g.
+
+```{r, fig.width=5, fig.height=4}
+plot(range(out$solution[,'time']),c(0,10),type='n',xlab='Time (d)',ylab='concentration (g/l)')
+lines(out$solution[,'time'],out$solution[,'M1'],col='black')
+lines(out$solution[,'time'],out$solution[,'S1'],col='red')
+lines(out$solution[,'time'],out$solution[,'P1'],col='blue')
+legend('topright',c('M1','S1','P1'),col=c('black','red','blue'),lty=1)
+```
+
+The second item, 'parms' is another list containing all the information about the simulation. We can look at the names of its entries:
+```{r}
+names(out$parms)
+```
+You can look at any of these entries to check the model settings for the simulation, e.g. 
+```{r}
+out$parms$microbeNames
+out$parms$resourceNames
+```
+
+**Let's see what happens if we add another microbe to this system**.
+
+The new microbe (M2) has a high maximum growth rate but also a high half-saturation constant compared with M1.
+
+```{r}
+M2=createDF(file="MFG2.csv")
+```
+
+M2 looks like this:
+```{r,echo=FALSE}
+kable(M2)
+```
+
+We also need to add this microbe to the microbe Sys Info file. Let's assume for simplicity that it has the same conditions as M1, then we can add the M1 column to the dataframe and name it M2:
+
+```{r}
+micNew.SI = cbind(mic.SI,M2=mic.SI[,'M1']) #cbind is a function which binds columns
+```
+
+```{r,echo=FALSE}
+kable(micNew.SI)
+```
+
+We now run a simulation with the two microbes and extend the time period to 3 days
+
+```{r, results='hide'}
+out=microPopModel(microbeNames = c('M1','M2'),
+              times=seq(0,3,0.001),
+              resourceSysInfo=res.SI,
+              microbeSysInfo=micNew.SI,
+              plotOptions = list(plotFig=FALSE)
+)
+```
+```{r, fig.height=4,fig.width=8, echo=FALSE}
+par(mfrow=c(1,2))
+plotMicrobes(out,cex.title=0.7,cex.legend=0.5,cex.ax=0.7)
+plotResources(out,cex.title=0.7,cex.legend=0.5,cex.ax=0.7)
+```
+
+
+
+## <font color='green'> QUESTIONS
+A. Why is concentration of M2 > M1 near the beginning but M2 < M1 near the end? [hint: look at parameter values]
+
+
+```{r,echo=TRUE, eval=TRUE}
+#SOLUTION 
+#look at the final concentrations:
+
+out$solution[nrow(out$solution),c('M1','M2')]
+
+#M1 and M2 have the same yield but M2 has a higher max growth rate and a higher halfSat. 
+#As time goes on the substrate concentration is low so the max growth rate is not important.
+#We change half-sat of M2 to 1e-4 (i.e. less than M1) and look what happens:
+newM2=M2 #make a new copy of M2 to play with
+newM2['halfSat','S1']=1e-4
+micNew.SI = cbind(micNew.SI,newM2=micNew.SI[,'M2']) #add newM2 to the microbe SI data frame (assume same conditions as M2)
+
+out=microPopModel(microbeNames = c('M1','newM2'),
+                  times=seq(0,3,0.001),
+                  resourceSysInfo=res.SI,
+                  microbeSysInfo=micNew.SI,
+                  plotOptions = list(plotFig=FALSE)
+)
+
+out$solution[nrow(out$solution),c('M1','newM2')]
+#Now M2 > M1 near the end of the simulation
+```
+
+B. What do you think will happen to M2 if we run the simulation for much longer e.g. 10 days?
+</font>
+
+```{r,echo=TRUE, eval=TRUE}
+#SOLUTION 
+out=microPopModel(microbeNames = c('M1','M2'),
+                  times=seq(0,10,0.001),
+                  resourceSysInfo=res.SI,
+                  microbeSysInfo=micNew.SI,
+                  plotOptions = list(plotFig=FALSE)
+)
+
+out$solution[nrow(out$solution),c('M1','M2')]
+#M2 dies out as it can't compete with M1 at low substrate concentrations.
+```
+
+
+## <font color='blue'> EXERCISE 
+
+Run microPop with different parameter values for yield, maximum growth and half saturation constant.
+Which parameters are important in the initial stages and which determine the steady state values (i.e. when the solution has stopped changing in time)?
+</font>
+
+
+```{r,echo=TRUE, eval=TRUE}
+#SOLUTION
+#start by making M1 and M2 the same:
+newM2[c('halfSat','yield','maxGrowthRate'),'S1'] = M1[c('halfSat','yield','maxGrowthRate'),'S1'] 
+
+out=microPopModel(microbeNames = c('M1','newM2'),
+                  times=seq(0,6,0.001),
+                  resourceSysInfo=res.SI,
+                  microbeSysInfo=micNew.SI,
+                  plotOptions=list(plotFig=FALSE)
+)
+
+#Look at steady state values
+out$solution[nrow(out$solution),c('M1','newM2','S1')]
+
+
+#Now investigate the effect of yield values:
+
+#make M2 have a lower yield than M1
+newM2['yield','S1'] = 0.5*as.numeric(M1['yield','S1'])
+
+out=microPopModel(microbeNames = c('M1','newM2'),
+                  times=seq(0,6,0.001),
+                  resourceSysInfo=res.SI,
+                  microbeSysInfo=micNew.SI,
+                  plotOptions = list(plotFig=FALSE)
+)
+out$solution[nrow(out$solution),c('M1','newM2','S1')]
+```
+
+
+`r if(TRUE){"Both microbes have the same steady state concentration i.e. neither microbe out competes the other but both their steady state values are lower than before.
+However, S1 has the same value as before.
+
+Mathematically the steady state solution for two co-existing microbes shows
+$$V^{out}=G_{M1}\\frac{S1}{S1+K1}=G_{M2}\\frac{S1}{S1+K2}$$
+i.e. they both have a specific growth rate equal to the wash out rate.
+
+For $K1=K2=K$ and $G1^{\\max}=G2^{\\max}=G^{\\max}$, the steady state substrate concentration is
+
+$$S=\\frac{V^{out} K}{G^{\\max}-V^{out}}$$
+i.e. it is unaffected by yield (as confirmed by our microPop solution).
+
+For $M1=M2=M$, the steady state concentrations of each microbe is
+$$M=\\frac{\\dot{S1^{in}}-V^{out}S1}{G\\left(\\frac{1}{Y1}+\\frac{1}{Y2}\\right)}$$
+i.e. SS value of M depends on the yield values.
+
+We can see from the first equation that for co-existence, the microbes must have identical growth rates. If $G^{\\max}$ and $K$ are not the same for both microbes then this is not the case, therefore, differing values of these parameters lead to exclusion of one microbe.
+Which microbe survives depends on the relative sizes of S1 and K as if $S1>>K$ then $\\frac{S1}{S1+K}$ approaches 1 (and $G^{\\max}$ is important), and if $S1<<K$ it approaches 0.
+
+"
+
+}`
+
+# Multiple Strains
+
+When we define the input file for a microbe, this can be viewed as a single strain or as a functional group. If it is a functional group then we can add a number of strains to it. We do this by setting the _numStrains_ argument in _microPopModel()_ to more than 1. We can then specify the parameters, e.g. _halfSat_, _yield_, _maxGrowthRate_ etc, for these strains to vary randomly around the average value for the group. This way we have a population of strains with the same metabolic paths but with slightly different growth traits.
+
+```{r, results='hide'}
+out=microPopModel(microbeNames = c('M1','M2'),
+              times=seq(0,3,0.001),
+              resourceSysInfo=res.SI,
+              microbeSysInfo=micNew.SI,
+              numStrains=3,
+              strainOptions=list(randomParams=c('halfSat','yield','maxGrowthRate'),
+                                 seed=1,distribution='uniform',
+                                 percentTraitRange=20,
+                                 applyTraitTradeOffs=TRUE,
+                                 tradeOffParams=c('halfSat','maxGrowthRate')),
+              plotOptions = list(plotFig=FALSE)
+)
+```
+```{r, fig.height=4,fig.width=8}
+par(mfrow=c(1,2))
+plotMicrobes(out,cex.title=0.7,cex.legend=0.5,cex.ax=0.7,sumOverStrains = FALSE)
+plotResources(out,cex.title=0.7,cex.legend=0.5,cex.ax=0.7)
+```
+
+Here there are 3 strains in each functional group (M1, M2) whose parameter values vary by +/- 20% from a uniform distribution around the mean value specified in the input data frames. The stochastically-generated values have been picked so there are trade-offs between the maximum growth rate and the half-saturation constant. Note that we have to specify `sumOverStrains=FALSE` to plot each strain in _plotMicrobes_ and if we were using the plotting function run in _microPopModel we would use `plotOptions = list(plotFig=TRUE,sumOverStrains=FALSE)`.
+
+
+We can look at the final distribution of biomass:
+```{r, fig.width=5, fig.height=4}
+barplot(out$solution[nrow(out$solution),out$parms$allStrainNames],col=c(rep('red',3),rep('cyan',3)))
+```
+
+Note the microPop nomenclature for naming the stochastic strains and these names are found in 
+
+```{r}
+out$parms$allStrainNames
+```
+
+It is also possible to have different numbers of strains in each group. In this case `numStrains` is a named vector, 
+```{r, results='hide'}
+out=microPopModel(microbeNames = c('M1','M2'),
+              times=seq(0,3,0.001),
+              resourceSysInfo=res.SI,
+              microbeSysInfo=micNew.SI,
+              numStrains=c(M1=2,M2=3),
+              strainOptions=list(randomParams=c('halfSat','yield','maxGrowthRate'),
+                                 seed=1,distribution='uniform',
+                                 percentTraitRange=20,
+                                 applyTraitTradeOffs=TRUE,
+                                 tradeOffParams=c('halfSat','maxGrowthRate')),
+              plotOptions = list(plotFig=FALSE)
+)
+```
+```{r, fig.height=4,fig.width=8,echo=FALSE}
+par(mfrow=c(1,2))
+plotMicrobes(out,cex.title=0.7,cex.legend=0.5,cex.ax=0.7,sumOverStrains = FALSE)
+plotResources(out,cex.title=0.7,cex.legend=0.5,cex.ax=0.7)
+```
+
+##<font color="blue"> EXERCISE
+
+Try increasing the number of strains (beware that more strains takes longer to compute though!) and change the range and distribution of the trait values.
+
+What happens if you run the simulation for 10 days - do all of the strains survive?
+
+</font>
+
+```{r,echo=TRUE, eval=TRUE}
+#SOLUTION
+out3=out #save the 3 day solution
+
+out10=microPopModel(microbeNames = c('M1','M2'),
+              times=seq(0,10,0.001),
+              resourceSysInfo=res.SI,
+              microbeSysInfo=micNew.SI,
+              numStrains=3,
+              strainOptions=list(randomParams=c('halfSat','yield','maxGrowthRate'),
+                                 seed=1,distribution='uniform',
+                                 percentTraitRange=20,
+                                 applyTraitTradeOffs=TRUE,
+                                 tradeOffParams=c('halfSat','maxGrowthRate')),
+              plotOptions = list(plotFig=FALSE)
+)
+
+```
+
+```{r,echo=TRUE, eval=TRUE, fig.width=5, fig.height=4}
+barplot(out10$solution[nrow(out10$solution),out10$parms$allStrainNames],col=c(rep('red',3),rep('cyan',3)))
+```
+
+```{r,echo=TRUE, eval=TRUE}
+
+out20=microPopModel(microbeNames = c('M1','M2'),
+              times=seq(0,20,0.001),
+              resourceSysInfo=res.SI,
+              microbeSysInfo=micNew.SI,
+              numStrains=3,
+              strainOptions=list(randomParams=c('halfSat','yield','maxGrowthRate'),
+                                 seed=1,distribution='uniform',
+                                 percentTraitRange=20,
+                                 applyTraitTradeOffs=TRUE,
+                                 tradeOffParams=c('halfSat','maxGrowthRate')),
+              plotOptions = list(plotFig=FALSE)
+)
+
+```
+
+```{r,echo=TRUE, eval=TRUE, fig.width=5, fig.height=4}
+barplot(out20$solution[nrow(out20$solution),out20$parms$allStrainNames],col=c(rep('red',3),rep('cyan',3)))
+```
+
+
+```{r,echo=TRUE, eval=TRUE, fig.width=5, fig.height=4}
+#Plot all together
+barplot(rbind(out3$solution[nrow(out3$solution),out3$parms$allStrainNames],
+              out10$solution[nrow(out10$solution),out10$parms$allStrainNames],
+              out20$solution[nrow(out20$solution),out20$parms$allStrainNames]),
+        beside=TRUE,legend.text = c('3 days','10 days','20 days'))
+
+```
+
+`r if(TRUE){"It is clear that all strains are decreasing in biomass apart from one."}`
+
+# Rate Functions
+
+MicroPop uses ordinary differential equations which define the rates of changes of the microbes, substrates and metabolic products (the "state variables") involved in the system. However, the general user does not need to concern themselves with these unless they want to change the default functions. 
+
+There are default functions for 
+
+* rate of entry of each state variable to the system -- **entryRateFunc()**
+
+* rate of exit of each state variable -- **removalRateFunc()**
+
+* the limit on the maximum growth rate e.g. Monod equation -- **growthLimFunc()**
+
+* how to combine growth on multiple resources -- **combineGrowthLimFunc()**
+
+* resource uptake rate due to microbial growth -- **uptakeFunc()**
+
+* production rate of metabolites -- **productionFunc()**
+
+* pH at each time point -- **pHFunc()**
+
+* the pH limit on growth -- **pHLimFunc()**
+
+* other limits on growth (e.g. inhibition) -- **extraGrowthLimFunc()**
+
+* combining growth on multiple metabolic paths -- **combinePathsFunc()**
+
+These are all contained in a list called **rateFuncs** which has a default version called **rateFuncsDefault**. 
+You can see this if you type rateFuncsDefault at the prompt (it is quite long though!). To just see the elements you can type 
+```{r}
+  names(rateFuncsDefault)
+```
+To look at one function, e.g. growthLimFunc use
+
+```{r}
+  rateFuncsDefault$growthLimFunc
+```
+
+This looks complicated because microPop is very generic so there are different equations for dealing with different types of resource, e.g. substitutable (S) and essential (Se) resources. Also there may be boosting resource (Sb) e.g. Acetate, or for viruses a microbe may be a resource (Sm).
+However, should you wish to replace this with your own function (which must have the same form of input arguments and output) then this is done as follows:
+
+```{r, eval=FALSE}
+  myRateFuncs = rateFuncsDefault #make your own copy of the rateFuncs list
+  myRateFuncs$growthLimFunc = myGrowthFunction #assign your own function  
+```
+where myGrowthFunction is your own function (which you will need to define before this point).
+Then when you call microPop you use the new rateFuncs list , i.e.
+
+```{r, eval=FALSE}
+out=microPopModel(microbeNames = 'M1',
+              times=seq(0,10,0.001),
+              resourceSysInfo=res.SI,
+              microbeSysInfo=mic.SI,
+              rateFuncs=myRateFuncs
+)
+```
+
+# pH
+It is well established that pH has a significant effect on microbial growth rates. We now import a new microbe, M3, which has pH preferences, consumes 2 substrates and generates 2 products.
+
+```{r}
+M3=createDF(file='MFG3.csv')
+```
+
+M3 looks like this:
+```{r,echo=FALSE}
+kable(M3)
+```
+
+The pH preference is defined by _pHcorners_ which describe the following shape:
+
+```{r fig.width=5,fig.height=3}
+plot(as.numeric(M3['pHcorners',2:5]),c(0,1,1,0),type='l',xlab='pH',ylab='pH limitation',col='blue',lwd=2)
+```
+
+This multiplies the _maxGrowthRate_, thus Where the limitation is 1 there is no restriction on growth and where the limit is 0 there is no growth; inbetween it it linearly scaled.
+
+We also need to read in the new resource SI file with the system information about these new resources (S2,P2).
+
+```{r}
+res.SI2=createDF(file='resourceSI2.csv')
+```
+
+res.SI2:
+```{r,echo=FALSE}
+kable(res.SI2) 
+```
+
+```{r}
+mic.SI2=createDF(file='microbeSI2.csv')
+```
+
+mic.SI2
+```{r,echo=FALSE}
+kable(mic.SI2) 
+```
+
+In order for the pH preferences to be relevant we need to specify the pH of the system. This can be done using the _pHVal_ argument in _microPopModel()_ (see code below) or if you want pH to change over time then you can use _pHFunc_ in the _rateFuncs_ list. To make sure the pH affects the growth we also need to set the microPopModel argument, _pHLimit=TRUE_. We now run simulations for different pHs and plot the results
+
+
+```{r, results='hide', fig.show='hide'}
+out1=microPopModel(microbeNames = 'M3',
+              times=seq(0,5,0.001),
+              resourceSysInfo=res.SI2,
+              microbeSysInfo=mic.SI2,
+              pHLimit=TRUE,
+              pHVal=4.1,
+              plotOptions=list(plotFig=FALSE)
+              )
+    
+out2=microPopModel(microbeNames = 'M3',
+              times=seq(0,5,0.001),
+              resourceSysInfo=res.SI2,
+              microbeSysInfo=mic.SI2,
+              pHLimit=TRUE,
+              pHVal=6,
+              plotOptions=list(plotFig=FALSE)
+              )
+```
+
+```{r, fig.width=5,fig.height=4}
+plot(range(out1$solution[,'time']),c(0,max(c(out1$solution[,'M3'],out2$solution[,'M3']))),type='n',xlab='Time (d)',ylab='Concentration (g/l)', main='M3',lwd=2)
+lines(out1$solution[,'time'],out1$solution[,'M3'],col='black',lwd=2)
+lines(out2$solution[,'time'],out2$solution[,'M3'],col='red',lwd=2)
+legend('right',col=1:2,lty=1,legend=c(4.1,6),title='pH',lwd=2)
+```
+
+
+
+## <font color='blue'> EXERCISE 
+
+Run a simulation where the pH changes from 6 to 4.1 after day 2. [Hint: you will need to change _pHFunc_ in the _rateFuncs_ list as described above for the growth function]
+
+
+</font>
+
+```{r,echo=TRUE, eval=TRUE}
+#SOLUTION
+myRateFuncs=rateFuncsDefault
+
+myRateFuncs$pHFunc=function(time,parms){
+  if (time<=2){
+    pH=6
+  }else{
+    pH=4.1
+  }
+  return(pH)
+}
+
+out=microPopModel(microbeNames = 'M3',
+              times=seq(0,5,0.001),
+              resourceSysInfo=res.SI2,
+              microbeSysInfo=mic.SI2,
+              pHLimit=TRUE,
+              rateFuncs=myRateFuncs
+)
+```
+
+# Included Data and Demo files
+The microPop package comes with many microbial data frames and system information files included. These are for modelling the human colonic microbiota, the rumen etc (they are described in Kettle et al, 2018 and used in the demofiles). You can get a list of the included data sets using:
+```{r}
+data(package='microPop')
+```
+
+Or on the **Environment** tab in Rstudio, change the drop down menu from **Global Environment** to **package:microPop** and then you will see the data sets in the package. You can click on these to look at them. 
+If you are not in Rstudio you can use _View()_ to look at them or just type the name of the data frame at the R prompt. 
+
+There are also a number of demo files included in the package. These correspond to the examples in Kettle et al (2018). To find where they are on your computer, use
+
+```{r,results='hide'}
+system.file('DemoFiles/',package='microPop')
+```
+
+You can then view them in any editor.
+
+**To run any of the examples in Kettle et al 2018, you can use the function _runMicroPopExample()_. E.g. **
+
+```{r, eval=FALSE}
+runMicroPopExample('human1') 
+```
+
+## Demofile: human1.R 
+
+This uses microPop to simulate the growth of 3 microbial functional groups that are found in the human colon (see Table 1 of Kettle et al., 2018). 
+Note that we don't need to define any of these data frames as they are already included.
+
+
+
+```{r, results='hide', fig.show='hide'}
+out=microPopModel(
+    microbeNames=c('Bacteroides','NoButyStarchDeg','Acetogens'),
+    times=seq(0,4,1/24),
+    resourceSysInfo=resourceSysInfoHuman,
+    microbeSysInfo=microbeSysInfoHuman,
+    plotOptions = list(plotFig=FALSE)
+)
+```
+
+```{r, fig.height=4,fig.width=8,echo=FALSE}
+par(mfrow=c(1,2))
+plotMicrobes(out,cex.title=0.7,cex.legend=0.5,cex.ax=0.7)
+plotResources(out,cex.title=0.7,cex.legend=0.5,cex.ax=0.7)
+```
+
+
+
+###<font color='blue'> EXERCISE 1
+
+Try adding in another included microbial dataset and see what happens. All 10 of the human colonic microbial groups have their information specified in the resourceSysInfoHuman and microbeSysInfoHuman data frames so that groups can be added or removed at will. Note, it is absolutely fine to have too much information in the SI files - microPop will just take the information needed for the microbes listed in microbeNames. [Hint: look at microbeSysInfoHuman to see the names of the microbes included in the human colon system.]
+
+</font>
+
+## Demofile: human2.R
+
+Now we add in a pH change half way through the simulation time
+
+```{r, results='hide',fig.show='hide'}
+
+simulation.times=seq(0,4,1/24)
+
+myRateFuncs=rateFuncsDefault
+
+myRateFuncs$pHFunc=function(time,parms){
+    if (time<=max(simulation.times)/2){pH=5.5}else{pH=6.5}
+    return(pH)
+}
+
+out=microPopModel(
+    microbeNames=c('Bacteroides','NoButyStarchDeg','Acetogens'),
+    times=simulation.times,
+    resourceSysInfo=resourceSysInfoHuman,
+    microbeSysInfo=microbeSysInfoHuman,
+    rateFuncs=myRateFuncs,
+    pHLimit=TRUE,
+    plotOptions = list(plotFig=FALSE)
+)
+```
+```{r, fig.height=4,fig.width=8,echo=FALSE}
+par(mfrow=c(1,2))
+plotMicrobes(out,cex.title=0.7,cex.legend=0.5,cex.ax=0.7)
+plotResources(out,cex.title=0.7,cex.legend=0.5,cex.ax=0.7)
+```
+
+
+
+
+
+
+## <font color='blue'> EXERCISE
+
+Try changing the _pHcorners_ for Bacteroides and look at what happens [Hint: copy Bacteroides to a new data frame e.g. myBacteroides and then edit that one and replace Bacteroides in microbeNames]
+</font>
+
+```{r,echo=TRUE, eval=TRUE}
+#SOLUTION
+
+myBacteroides=Bacteroides
+
+print(myBacteroides['pHcorners',])
+print(myBacteroides['pHcorners',2:5])
+myBacteroides['pHcorners',2:5]=c(5,6,7,8)
+
+microbeHuman.SI = cbind(microbeSysInfoHuman,myBacteroides=microbeSysInfoHuman[,'Bacteroides']) #add Sys Info
+
+out=microPopModel(
+    microbeNames=c('myBacteroides','NoButyStarchDeg','Acetogens'),
+    times=simulation.times,
+    resourceSysInfo=resourceSysInfoHuman,
+    microbeSysInfo=microbeHuman.SI,
+    rateFuncs=myRateFuncs,
+    pHLimit=TRUE
+)
+
+```
+
+#Stoichiometries and essential resources
+
+In the M3 dataframe there are two substrates S1, S2 and two products P1, P2. The molar masses of these are defined in res.SI2 and are S1=100 g/mol, S2=100 g/mol, P1=50 g/mol and P2=25 g/mol. The stoichiometry will only balance if either S1 or S2 is used - not both. 
+
+2 S1 or 2 S2 -> 3 P1 +2 P2
+
+2 x 100g or 2 x 100g -> 3 x 50g + 2 x 25g
+
+This is because these are **substitutable resources**.
+
+```{r, echo=FALSE}
+kable(M3)
+```
+
+The substrates are given Rtype S for substitutable, i.e. M3, can grow on either/both S1 and S2. 
+This means that the stoichiom entry means 2 mol of S1 or 2 mol of S2 will give 3 mol of P1 and 2 mol of P2.
+
+If both substrates were required for growth these would be given an Rtype of Se for essential substrate. 
+E.g., methanogens require both CO2 and H2 to produce methane. Methanogens are an included data frame and can be viewed without loading. There is a version for the human colon (_Methanogens_) and for the rumen (_Xh2_). We will look at _Xh2_ as it is a simpler version (no formate path):
+
+
+```{r, echo=FALSE}
+kable(Xh2)
+```
+
+Notice here that the microbial biomass is also included as a product in the stoichiometry (and therefore ammonia is also included as a substrate). The prefix 'S' indicates a soluble element.
+
+When we are dealing with essential resources the **keyResource** category is used by microPop. 
+This is needed as it is the substrate used for the yield value i.e. if H2 (Sh2) is the keyResource then a yield of 0.0904 is 0.09g of methanogens per 1 g of H2.
+
+
+## Growth Equations
+For growth on essential resources, all substrates must be present for growth therefore if we have two substrates S1 and S2, we use:
+$$G=G^{\max} \frac{S1}{(S1+K1)}\frac{S2}{(S2+K2)}$$
+Whereas for substitutable resources, not all substrates need be present. However, if 2 substrates are available this does not mean the microbe will grow at twice the speed than if only one were present. There is a penalty for using two and this is is incorporated into the growth equations so that the specific growth rate on S1 if both S1 and S2 is given by: 
+$$
+G_1=G_{S1}^{\max}\frac{S1}{K1\left(1+\frac{S1}{K1}+\frac{S2}{K2}\right)}
+$$
+And the growth on S2 is given by 
+$$
+G_2=G_{S2}^{\max}\frac{S2}{K2\left(1+\frac{S1}{K1}+\frac{S2}{K2}\right)}
+$$
+We then use $G = G_1 + G_2$ to compute the total specific growth.
+Note that if only one substrate is present this reverts to simple Monod Equation growth.
+Also note that for substitutable resources the maximum growth rate on each resource can be different. For essential resources the microbe only has one maximum growth rate and this is specified to be on the keyResource.
+
+
+

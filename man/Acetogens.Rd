@@ -4,7 +4,9 @@
 \name{Acetogens}
 \alias{Acetogens}
 \title{Acetogens dataframe}
-\format{dataframe}
+\format{
+dataframe
+}
 \usage{
 Acetogens
 }
